@@ -1,0 +1,43 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+<SiteLayout title="MCP Failure Lab — MCP Lab" description="Deterministic failure scenarios for MCP server resilience testing.">
+<main class="shell">
+  <section class="hero">
+    <div class="kicker">MCP Lab / MCP Failure Lab</div>
+    <h1>Deterministic failure scenarios for MCP servers.</h1>
+    <p class="lede">Reproduce delay, hanging requests, cancellation, and transport loss through a real MCP client/server execution path.</p>
+    <div class="actions"><a class="button primary" href="/docs/getting-started">Install and run</a><a class="button" href="https://github.com/anilloutombam/mcp-failure-lab">Source code</a></div>
+    <div class="meta"><span class="available">Available on npm</span><span>TypeScript</span><span>MIT</span><span>Early release</span></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Quick start</h2>
+    <p class="section-intro">No repository checkout, external MCP server, or API key is required.</p>
+    <div class="example-grid">
+      <div class="code-panel"><div class="code-label"><span>terminal</span><span>command</span></div><pre><span class="token-muted">$</span> npx mcp-failure-lab demo</pre></div>
+      <div class="code-panel"><div class="code-label"><span>demo</span><span>result</span></div><pre>Scenario:   Deterministic delay demo
+Outcome:    <span class="token-pass">success</span>
+Duration:   ~500 ms
+Assertions: <span class="token-pass">passed</span></pre></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Execution model</h2>
+    <p class="section-intro">Each scenario runs against Failure Lab’s built-in server. The primary call and optional observer call are sequential and use the same MCP client connection.</p>
+    <table class="capabilities"><thead><tr><th>Stage</th><th>Responsibility</th><th>Implemented</th></tr></thead><tbody>
+      <tr><td>Load</td><td>Validate a code-first or JSON scenario definition.</td><td><span class="tag">yes</span></td></tr>
+      <tr><td>Execute</td><td>Call a registered tool through an MCP client connection.</td><td><span class="tag">yes</span></td></tr>
+      <tr><td>Record</td><td>Capture outcome, duration, result, or execution error.</td><td><span class="tag">yes</span></td></tr>
+      <tr><td>Assert</td><td>Check outcome, maximum duration, `isError`, and returned text.</td><td><span class="tag">yes</span></td></tr>
+      <tr><td>Observe</td><td>Run a separate post-condition call such as `ping`.</td><td><span class="tag">yes</span></td></tr>
+      <tr><td>Report</td><td>Render console or JSON output and select an exit code.</td><td><span class="tag">yes</span></td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section split"><div><h3>CI behavior</h3><p>Exit code 0 means expectations passed, 2 means assertions failed, and 1 means the scenario could not be loaded or executed.</p></div><div><h3>Operational behavior</h3><p>stdio protocol traffic stays on stdout. Diagnostics use stderr, and SIGINT or SIGTERM triggers graceful shutdown.</p></div></section>
+
+  <section class="section"><div class="notice"><strong>Current boundary.</strong> External client orchestration, Streamable HTTP, JUnit reports, malformed messages, duplicate responses, and session-loss faults are not implemented.</div><div class="actions"><a class="button primary" href="/docs/getting-started">Read the documentation</a><a class="button" href="/docs/examples">View examples</a></div></section>
+</main>
+</SiteLayout>

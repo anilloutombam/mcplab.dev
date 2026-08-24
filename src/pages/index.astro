@@ -1,0 +1,56 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+<SiteLayout title="MCP Lab — Failure testing for MCP systems" description="Open-source tools for deterministic MCP failure and resilience testing." image="/og.png">
+<main class="shell">
+  <section class="hero">
+    <div class="kicker">MCP Lab / open-source testing tools</div>
+    <h1>Test MCP timeout, cancellation, and disconnect handling.</h1>
+    <p class="lede">MCP Lab develops focused tools for reproducing failure conditions in Model Context Protocol systems. The first project, MCP Failure Lab, runs deterministic scenarios against a purpose-built MCP server.</p>
+    <div class="actions"><a class="button primary" href="/docs/getting-started">Getting started</a><a class="button" href="https://github.com/anilloutombam/mcp-failure-lab">GitHub repository</a></div>
+    <div class="meta"><span class="available">Usable early release</span><span>MIT licensed</span><span>Node.js 22.19+</span><span>stdio transport</span></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">A scenario and its result</h2>
+    <p class="section-intro">The runner makes a real MCP tool call, records the observed outcome and duration, then evaluates the declared expectations.</p>
+    <div class="example-grid">
+      <div class="code-panel"><div class="code-label"><span>delay-success.json</span><span>input</span></div><pre>&#123;
+  <span class="token-key">"name"</span>: <span class="token-string">"bounded delay succeeds"</span>,
+  <span class="token-key">"call"</span>: &#123;
+    <span class="token-key">"tool"</span>: <span class="token-string">"delay"</span>,
+    <span class="token-key">"args"</span>: &#123; <span class="token-key">"delayMs"</span>: 250 &#125;
+  &#125;,
+  <span class="token-key">"timeoutMs"</span>: 1000,
+  <span class="token-key">"expect"</span>: &#123;
+    <span class="token-key">"outcome"</span>: <span class="token-string">"success"</span>,
+    <span class="token-key">"maxDurationMs"</span>: 500
+  &#125;
+&#125;</pre></div>
+      <div class="code-panel"><div class="code-label"><span>console</span><span>output</span></div><pre><span class="token-muted">$ npm run dev -- run \
+  examples/scenarios/delay-success.json</span>
+
+Scenario:   bounded delay succeeds
+Outcome:    <span class="token-pass">success</span>
+Duration:   ~250 ms
+Assertions: <span class="token-pass">passed</span></pre></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">MCP Failure Lab</h2>
+    <p class="section-intro">The current release covers a deliberately small set of failure modes and reporting primitives.</p>
+    <table class="capabilities"><thead><tr><th>Capability</th><th>Behavior</th><th>Status</th></tr></thead><tbody>
+      <tr><td>delay</td><td>Bounded, cancellation-aware latency from 0 to 30 seconds.</td><td><span class="tag">available</span></td></tr>
+      <tr><td>hang</td><td>A pending request that ends only on client cancellation.</td><td><span class="tag">available</span></td></tr>
+      <tr><td>disconnect</td><td>Transport loss while a tool request is in flight.</td><td><span class="tag">available</span></td></tr>
+      <tr><td>ping</td><td>Health and post-condition verification through a separate tool path.</td><td><span class="tag">available</span></td></tr>
+      <tr><td>reporting</td><td>Console and stable JSON output with CI-oriented exit codes.</td><td><span class="tag">available</span></td></tr>
+      <tr><td>HTTP / JUnit</td><td>Streamable HTTP transport and JUnit reports.</td><td><span class="tag planned">planned</span></td></tr>
+    </tbody></table>
+    <div class="actions"><a class="button" href="/failure">Project details</a><a class="button" href="/docs">Documentation</a></div>
+  </section>
+
+  <section class="section split"><div><h3>What it is</h3><p>A deterministic test server, scenario runner, assertion model, and CLI for exercising known MCP failure paths.</p></div><div><h3>What it is not</h3><p>It is not currently a general-purpose proxy, protocol compliance suite, or external MCP client orchestrator.</p></div></section>
+</main>
+</SiteLayout>

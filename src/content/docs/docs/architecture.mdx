@@ -1,0 +1,44 @@
+---
+title: Architecture
+description: How Failure Lab separates server construction, transport, tools, and scenario execution.
+---
+
+## Scenario execution path
+
+Failure Lab uses a real MCP client/server path. Fault behavior lives in the registered tools rather than in a proxy or a second simulation layer.
+
+<div class="arch-diagram" role="img" aria-label="Scenario execution flows from the CLI to the scenario runner, MCP client, transport, Failure Lab server, and registered tools. Results return to the runner as a scenario recording.">
+  <div class="arch-flow">
+    <div class="arch-node"><strong>CLI</strong><span>Loads JSON and selects reporting</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node accent"><strong>Scenario runner</strong><span>Executes calls and evaluates expectations</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node"><strong>MCP client</strong><span>One shared client connection</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node"><strong>Transport</strong><span>In-memory for scenarios; stdio for serve</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node accent"><strong>Failure Lab server</strong><span>Registered tool handlers</span><div class="arch-tools"><span class="arch-tool">ping</span><span class="arch-tool">delay</span><span class="arch-tool">hang</span><span class="arch-tool">disconnect</span></div></div>
+  </div>
+  <div class="arch-return">← result, timeout, or connection failure · optional observer call · combined scenario recording</div>
+  <div class="arch-legend"><span class="current">Failure Lab domain logic</span><span>Transport and MCP plumbing</span></div>
+</div>
+
+## Responsibilities
+
+The stdio server path separates five responsibilities:
+
+1. The CLI parses commands and starts `serve`.
+2. `StdioServerTransport` exchanges MCP messages over stdin and stdout.
+3. `createServer` constructs the server without starting I/O.
+4. `ping` supplies a deterministic health path.
+5. `delay`, `hang`, and `disconnect` reproduce controlled failures.
+
+Server construction and execution stay separate so integration tests and future transports can reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr.
+
+## Primary and observer calls
+
+The runner records the primary observation and evaluates its expectations. When `observe` is configured, it then performs a separate tool call on the same MCP client connection. Observer results remain separate in the recording, while their assertion failures contribute to the overall scenario status.
+
+:::note[Deliberate boundary]
+The current architecture is not a proxy and does not orchestrate external MCP clients. Streamable HTTP and target-client adapters are future work.
+:::
