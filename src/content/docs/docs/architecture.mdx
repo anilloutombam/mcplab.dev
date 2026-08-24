@@ -3,6 +3,24 @@ title: Architecture
 description: How Failure Lab separates server construction, transport, tools, and scenario execution.
 ---
 
+## Server and transport path
+
+The built-in server exposes the same registered tools to an MCP host or Inspector over stdio. Server construction stays separate from transport startup, so the tool configuration can also be reused by scenario tests.
+
+<div class="arch-diagram" role="img" aria-label="An MCP host or Inspector exchanges messages with the stdio transport, which connects to the Failure Lab server and its ping, delay, hang, and disconnect tools. The serve command starts the transport and server.">
+  <div class="arch-flow arch-flow-server">
+    <div class="arch-node"><strong>MCP host</strong><span>Client or Inspector</span></div>
+    <div class="arch-arrow" aria-hidden="true">⇄</div>
+    <div class="arch-node"><strong>stdio transport</strong><span>MCP messages over stdin and stdout</span></div>
+    <div class="arch-arrow" aria-hidden="true">⇄</div>
+    <div class="arch-node accent"><strong>Failure Lab server</strong><span>Created independently of I/O</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node accent"><strong>Registered tools</strong><div class="arch-tools"><span class="arch-tool">ping</span><span class="arch-tool">delay</span><span class="arch-tool">hang</span><span class="arch-tool">disconnect</span></div></div>
+  </div>
+  <div class="arch-return"><strong>serve</strong> starts the stdio transport and attaches it to the configured server · diagnostics remain on stderr</div>
+  <div class="arch-legend"><span class="current">Failure Lab domain logic</span><span>Transport and MCP plumbing</span></div>
+</div>
+
 ## Scenario execution path
 
 Failure Lab uses a real MCP client/server path. Fault behavior lives in the registered tools rather than in a proxy or a second simulation layer.
@@ -38,6 +56,21 @@ Server construction and execution stay separate so integration tests and future 
 ## Primary and observer calls
 
 The runner records the primary observation and evaluates its expectations. When `observe` is configured, it then performs a separate tool call on the same MCP client connection. Observer results remain separate in the recording, while their assertion failures contribute to the overall scenario status.
+
+<div class="arch-diagram" role="img" aria-label="The runner executes and evaluates the primary call, then optionally executes and evaluates an observer call before producing the combined scenario recording.">
+  <div class="arch-flow arch-flow-observer">
+    <div class="arch-node accent"><strong>Primary call</strong><span>Execute the configured fault tool</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node"><strong>Primary expectations</strong><span>Evaluate outcome, duration, and result</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node accent"><strong>Observer call</strong><span>Optional, sequential, same client connection</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node"><strong>Observer expectations</strong><span>Verify state through a separate tool path</span></div>
+    <div class="arch-arrow" aria-hidden="true">→</div>
+    <div class="arch-node accent"><strong>Scenario recording</strong><span>Keep observations separate; combine failures</span></div>
+  </div>
+  <div class="arch-return">The observer runs after the primary call, including when the primary call errors or times out</div>
+</div>
 
 :::note[Deliberate boundary]
 The current architecture is not a proxy and does not orchestrate external MCP clients. Streamable HTTP and target-client adapters are future work.

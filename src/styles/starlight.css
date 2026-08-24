@@ -14,6 +14,8 @@ code { border-radius:4px; } pre { border:1px solid var(--sl-color-gray-5)!import
 select[aria-label='Select theme'] { border-radius:6px; }
 .arch-diagram { margin:1.5rem 0 2rem; padding:1.25rem; border:1px solid var(--sl-color-gray-5); border-radius:8px; background:var(--sl-color-gray-6); overflow-x:auto; }
 .arch-flow { display:grid; grid-template-columns:minmax(105px,1fr) 24px minmax(120px,1fr) 24px minmax(105px,1fr) 24px minmax(130px,1.1fr) 24px minmax(150px,1.2fr); align-items:stretch; min-width:820px; }
+.arch-flow-server { grid-template-columns:minmax(120px,1fr) 24px minmax(145px,1.15fr) 24px minmax(145px,1.15fr) 24px minmax(170px,1.3fr); min-width:720px; }
+.arch-flow-observer { grid-template-columns:minmax(130px,1fr) 24px minmax(145px,1fr) 24px minmax(145px,1fr) 24px minmax(155px,1fr) 24px minmax(150px,1fr); min-width:860px; }
 .arch-node { display:flex; flex-direction:column; justify-content:center; min-height:86px; padding:.85rem; border:1px solid var(--sl-color-gray-4); border-radius:6px; background:var(--sl-color-black); }
 .arch-node strong { color:var(--sl-color-white); font:600 .78rem/1.35 var(--sl-font-mono); }.arch-node span { margin-top:.35rem; color:var(--sl-color-gray-2); font-size:.72rem; line-height:1.4; }
 .arch-node.accent { border-color:var(--sl-color-accent); }.arch-arrow { display:flex; align-items:center; justify-content:center; color:var(--sl-color-gray-3); font-family:var(--sl-font-mono); }
