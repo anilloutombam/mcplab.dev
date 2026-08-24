@@ -1,11 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import mermaid from 'astro-mermaid';
 import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://mcplab.dev',
 	integrations: [
+		mermaid({
+			autoTheme: true,
+			enableLog: false,
+			mermaidConfig: {
+				flowchart: { curve: 'linear' },
+				sequence: { mirrorActors: false },
+			},
+		}),
 		starlight({
 			title: 'MCP Lab',
 			description: 'Deterministic failure testing for MCP systems.',

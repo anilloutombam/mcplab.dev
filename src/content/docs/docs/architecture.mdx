@@ -3,25 +3,53 @@ title: Architecture
 description: How Failure Lab separates server construction, transport, tools, and scenario execution.
 ---
 
+## Server and transport path
+
+The built-in server exposes the same registered tools to an MCP host or Inspector over stdio. Server construction stays separate from transport startup, so the tool configuration can also be reused by scenario tests.
+
+```mermaid
+graph LR
+    Host[MCP Host or Inspector] <--> Transport[stdio Transport]
+    Transport <--> Server[MCP Failure Lab Server]
+    Server --> Registration[Tool Registration]
+    Registration --> Ping[ping]
+    Registration --> Delay[delay]
+    Registration --> Hang[hang]
+    Registration --> Disconnect[disconnect]
+    CLI[CLI serve command] --> Transport
+    CLI --> Server
+```
+
+*Figure 1. Current server and stdio transport architecture.*
+
 ## Scenario execution path
 
 Failure Lab uses a real MCP client/server path. Fault behavior lives in the registered tools rather than in a proxy or a second simulation layer.
 
-<div class="arch-diagram" role="img" aria-label="Scenario execution flows from the CLI to the scenario runner, MCP client, transport, Failure Lab server, and registered tools. Results return to the runner as a scenario recording.">
-  <div class="arch-flow">
-    <div class="arch-node"><strong>CLI</strong><span>Loads JSON and selects reporting</span></div>
-    <div class="arch-arrow" aria-hidden="true">→</div>
-    <div class="arch-node accent"><strong>Scenario runner</strong><span>Executes calls and evaluates expectations</span></div>
-    <div class="arch-arrow" aria-hidden="true">→</div>
-    <div class="arch-node"><strong>MCP client</strong><span>One shared client connection</span></div>
-    <div class="arch-arrow" aria-hidden="true">→</div>
-    <div class="arch-node"><strong>Transport</strong><span>In-memory for scenarios; stdio for serve</span></div>
-    <div class="arch-arrow" aria-hidden="true">→</div>
-    <div class="arch-node accent"><strong>Failure Lab server</strong><span>Registered tool handlers</span><div class="arch-tools"><span class="arch-tool">ping</span><span class="arch-tool">delay</span><span class="arch-tool">hang</span><span class="arch-tool">disconnect</span></div></div>
-  </div>
-  <div class="arch-return">← result, timeout, or connection failure · optional observer call · combined scenario recording</div>
-  <div class="arch-legend"><span class="current">Failure Lab domain logic</span><span>Transport and MCP plumbing</span></div>
-</div>
+```mermaid
+sequenceDiagram
+    participant Runner as Scenario Runner
+    participant Client as MCP Client
+    participant Server as MCP Server
+
+    Runner->>Client: Primary tool call
+    Client->>Server: Execute primary path
+    Server-->>Client: Result or protocol failure
+    Client-->>Runner: Primary observation
+    Runner->>Runner: Evaluate primary expectations
+
+    opt observe is configured
+        Runner->>Client: Observer tool call
+        Client->>Server: Execute separate tool path
+        Server-->>Client: Observer result or protocol failure
+        Client-->>Runner: Observer observation
+        Runner->>Runner: Evaluate observer expectations
+    end
+
+    Runner->>Runner: Produce combined scenario recording
+```
+
+*Figure 2. Primary and optional observer calls execute sequentially.*
 
 ## Responsibilities
 
@@ -38,6 +66,25 @@ Server construction and execution stay separate so integration tests and future 
 ## Primary and observer calls
 
 The runner records the primary observation and evaluates its expectations. When `observe` is configured, it then performs a separate tool call on the same MCP client connection. Observer results remain separate in the recording, while their assertion failures contribute to the overall scenario status.
+
+```mermaid
+flowchart TD
+    Primary[Execute primary call] --> PrimaryAssertions[Evaluate primary expectations]
+    PrimaryAssertions --> Configured{Observer configured?}
+    Configured -- No --> Final[Produce scenario recording]
+    Configured -- Yes --> Observer[Execute observer call]
+    Observer --> Returned{MCP result returned?}
+    Returned -- No --> ObserverFailure[Observer verification fails]
+    Returned -- Yes --> ObserverAssertions[Evaluate observer expectations]
+    ObserverAssertions --> Match{Expectations pass?}
+    Match -- Yes --> ObserverPass[Observer passes]
+    Match -- No --> AssertionFailure[Record observer assertion failure]
+    ObserverFailure --> Final
+    ObserverPass --> Final
+    AssertionFailure --> Final
+```
+
+*Figure 3. Observer verification and failure handling.*
 
 :::note[Deliberate boundary]
 The current architecture is not a proxy and does not orchestrate external MCP clients. Streamable HTTP and target-client adapters are future work.
