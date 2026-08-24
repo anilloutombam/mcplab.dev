@@ -2,6 +2,17 @@
 
 This repository contains the MCP Lab website and MCP Failure Lab documentation.
 
+## Requirements
+
+- Node.js 22.19.0 or newer
+- npm
+
+## First contribution
+
+Small documentation corrections, broken links, accessibility improvements, and focused examples are good places to start.
+
+Before beginning a larger design, navigation, or documentation-structure change, open an issue to discuss the proposal.
+
 ## Before making a change
 
 - Confirm product behavior against the current [`mcp-failure-lab`](https://github.com/anilloutombam/mcp-failure-lab) source or release documentation.
@@ -29,3 +40,5 @@ Documentation lives in `src/content/docs/`. The marketing pages are `src/pages/i
 ## Pull requests
 
 Keep each pull request focused. Describe the behavior or documentation source that justifies product-content changes.
+
+Review the Vercel preview before merging. Check links and navigation, and inspect light theme, dark theme, and mobile layout when the change affects presentation.
