@@ -22,6 +22,10 @@ export default defineConfig({
 			customCss: ['./src/styles/starlight.css'],
 			head: [
 				{ tag: 'meta', attrs: { name: 'theme-color', content: '#090a0c' } },
+				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://mcplab.dev/og.png' } },
+				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1731' } },
+				{ tag: 'meta', attrs: { property: 'og:image:height', content: '909' } },
+				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://mcplab.dev/og.png' } },
 				{ tag: 'script', content: `const storedTheme = localStorage.getItem('starlight-theme'); if (storedTheme !== 'light' && storedTheme !== 'dark') localStorage.setItem('starlight-theme', matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.addEventListener('DOMContentLoaded', () => document.querySelector('select[aria-label="Select theme"] option[value="auto"]')?.remove());` },
 			],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/anilloutombam/mcp-failure-lab' }],
