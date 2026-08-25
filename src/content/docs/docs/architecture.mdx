@@ -5,18 +5,18 @@ description: How Failure Lab separates server construction, transport, tools, an
 
 ## Server and transport path
 
-The built-in server exposes the same registered tools to an MCP host or Inspector over stdio. Server construction stays separate from transport startup, so the tool configuration can also be reused by scenario tests.
+The built-in server exposes the same registered tools to an MCP host or Inspector over stdio. The SDK v2 `serveStdio` entry owns protocol negotiation and serves `2026-07-28` and compatible `2025-11-25` clients from the same server factory.
 
 ```mermaid
 graph LR
-    Host[MCP Host or Inspector] <--> Transport[stdio Transport]
-    Transport <--> Server[MCP Failure Lab Server]
+    Host[MCP Host or Inspector] <--> Entry[serveStdio]
+    Entry <--> Server[MCP Failure Lab Server]
     Server --> Registration[Tool Registration]
     Registration --> Ping[ping]
     Registration --> Delay[delay]
     Registration --> Hang[hang]
     Registration --> Disconnect[disconnect]
-    CLI[CLI serve command] --> Transport
+    CLI[CLI serve command] --> Entry
     CLI --> Server
 ```
 
@@ -24,24 +24,29 @@ graph LR
 
 ## Scenario execution path
 
-Failure Lab uses a real MCP client/server path. Fault behavior lives in the registered tools rather than in a proxy or a second simulation layer.
+Failure Lab uses a real MCP client/server path. Built-in scenarios target `2026-07-28` through the SDK v2 in-process HTTP handler. This handler is internal to scenario execution; it does not expose a public HTTP endpoint. Fault behavior lives in the registered tools rather than in a proxy or a second simulation layer.
 
 ```mermaid
 sequenceDiagram
     participant Runner as Scenario Runner
     participant Client as MCP Client
+    participant Handler as In-process MCP Handler
     participant Server as MCP Server
 
     Runner->>Client: Primary tool call
-    Client->>Server: Execute primary path
-    Server-->>Client: Result or protocol failure
+    Client->>Handler: HTTP request (2026-07-28)
+    Handler->>Server: Execute primary path
+    Server-->>Handler: Result or protocol failure
+    Handler-->>Client: HTTP response
     Client-->>Runner: Primary observation
     Runner->>Runner: Evaluate primary expectations
 
     opt observe is configured
         Runner->>Client: Observer tool call
-        Client->>Server: Execute separate tool path
-        Server-->>Client: Observer result or protocol failure
+        Client->>Handler: Separate HTTP request
+        Handler->>Server: Execute observer path
+        Server-->>Handler: Observer result or protocol failure
+        Handler-->>Client: HTTP response
         Client-->>Runner: Observer observation
         Runner->>Runner: Evaluate observer expectations
     end
@@ -56,12 +61,12 @@ sequenceDiagram
 The stdio server path separates five responsibilities:
 
 1. The CLI parses commands and starts `serve`.
-2. `StdioServerTransport` exchanges MCP messages over stdin and stdout.
+2. `serveStdio` negotiates the protocol era and exchanges MCP messages over stdin and stdout.
 3. `createServer` constructs the server without starting I/O.
 4. `ping` supplies a deterministic health path.
 5. `delay`, `hang`, and `disconnect` reproduce controlled failures.
 
-Server construction and execution stay separate so integration tests and future transports can reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr.
+Server construction and execution stay separate so the stdio entry and built-in scenario handler can reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr.
 
 ## Primary and observer calls
 

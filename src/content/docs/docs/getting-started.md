@@ -9,7 +9,7 @@ MCP Failure Lab requires Node.js 22.19.0 or newer and npm. The fastest path need
 npx mcp-failure-lab demo
 ```
 
-The demo runs a real deterministic 500ms delay through the built-in client, in-memory transport, server, `delay` tool, and assertion pipeline.
+The demo runs a real deterministic 500ms delay through the built-in client, the SDK v2 in-process handler, the `delay` tool, and the assertion pipeline. Scenario execution targets MCP `2026-07-28`.
 
 ## Explore the CLI
 
@@ -25,6 +25,8 @@ npx mcp-failure-lab serve
 ```
 
 The process waits silently for a client. Protocol messages use stdout, so operational diagnostics are written to stderr. Press `Ctrl+C` for graceful shutdown.
+
+The stdio server supports MCP `2026-07-28` and retains `2025-11-25` compatibility.
 
 ## Run an included scenario
 

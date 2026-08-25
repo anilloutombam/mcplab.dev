@@ -23,6 +23,16 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   <Card title="Report clearly" icon="document">Produce console output or stable JSON for CI.</Card>
 </CardGrid>
 
+## Protocol compatibility
+
+MCP Failure Lab uses MCP TypeScript SDK v2 and targets protocol version
+`2026-07-28` for built-in scenario execution. The stdio server also accepts
+`2025-11-25` clients for compatibility.
+
+The fault tools keep the same user-facing behavior across both protocol eras.
+Protocol features that depend on the older server-initiated request model are
+outside the current fault set.
+
 :::note[Current scope]
 Failure Lab runs scenarios against its own built-in MCP server. External client orchestration, Streamable HTTP, JUnit output, and additional protocol faults are not implemented yet.
 :::
