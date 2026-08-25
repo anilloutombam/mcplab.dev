@@ -4,7 +4,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 const upiId = import.meta.env.PUBLIC_UPI_ID || 'your-upi-id@bank';
 const upiName = import.meta.env.PUBLIC_UPI_NAME || 'MCP Lab';
 const isConfigured = upiId !== 'your-upi-id@bank';
-const amounts = [49, 99, 199];
+const amounts = [49, 99];
 const paymentUri = (amount: number) => `upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: String(amount), cu: 'INR', tn: 'Support MCP Lab' })}`;
 const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(paymentUri(amount))}`;
 ---
@@ -26,6 +26,7 @@ const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?s
         <div><p class="eyebrow">India / UPI</p><h2>Buy the project some build time.</h2><p>Choose an amount, then scan the QR code or open your preferred UPI app on mobile.</p></div>
         <div class="amount-picker" role="group" aria-label="Choose a support amount">
           {amounts.map((amount, index) => <button class:list={['amount-option', { selected: index === 1 }]} type="button" data-amount={amount} aria-pressed={index === 1 ? 'true' : 'false'}>₹{amount}</button>)}
+          <label class="custom-amount"><span>Custom</span><span class="currency" aria-hidden="true">₹</span><input type="number" inputmode="numeric" min="1" max="100000" step="1" placeholder="Amount" aria-label="Custom support amount in rupees" data-custom-amount /></label>
         </div>
         <div class="upi-payment">
           <div class="qr-frame">
@@ -47,18 +48,31 @@ const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?s
 
   <script define:vars={{ upiId, upiName, isConfigured }}>
     const options = document.querySelectorAll('[data-amount]');
+    const customAmount = document.querySelector('[data-custom-amount]');
     const qr = document.querySelector('[data-qr]');
     const payLink = document.querySelector('[data-pay-link]');
     const display = document.querySelector('[data-display-amount]');
     const makeUri = (amount) => `upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: amount, cu: 'INR', tn: 'Support MCP Lab' })}`;
-    options.forEach((option) => option.addEventListener('click', () => {
-      const amount = option.dataset.amount;
-      options.forEach((item) => { item.classList.toggle('selected', item === option); item.setAttribute('aria-pressed', String(item === option)); });
+    const setAmount = (amount, selectedOption = null) => {
+      options.forEach((item) => { item.classList.toggle('selected', item === selectedOption); item.setAttribute('aria-pressed', String(item === selectedOption)); });
       display.textContent = `₹${amount}`;
       const uri = makeUri(amount);
       qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(uri)}`;
       qr.alt = `UPI QR code to support MCP Lab with ₹${amount}`;
       if (isConfigured) payLink.href = uri;
+    };
+    options.forEach((option) => option.addEventListener('click', () => {
+      customAmount.value = '';
+      setAmount(option.dataset.amount, option);
     }));
+    customAmount.addEventListener('input', () => {
+      const amount = Number(customAmount.value);
+      const valid = Number.isInteger(amount) && amount >= 1 && amount <= 100000;
+      customAmount.setAttribute('aria-invalid', String(!valid && customAmount.value !== ''));
+      if (valid) setAmount(String(amount));
+      else if (isConfigured) payLink.removeAttribute('href');
+      payLink.classList.toggle('disabled', !valid || !isConfigured);
+      payLink.setAttribute('aria-disabled', String(!valid || !isConfigured));
+    });
   </script>
 </SiteLayout>
