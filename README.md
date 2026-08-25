@@ -6,6 +6,7 @@ The site contains:
 
 - the MCP Lab homepage at `/`;
 - the MCP Failure Lab project page at `/failure`;
+- the community support page at `/support`;
 - product documentation under `/docs`.
 
 ## Documentation policy
