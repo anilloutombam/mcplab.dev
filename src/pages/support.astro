@@ -35,7 +35,8 @@ const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?s
           <div class="upi-details">
             <p class="payment-amount"><span data-display-amount>₹99</span> via UPI</p>
             <p class="upi-id"><span>{upiId}</span></p>
-            <a class:list={['button', 'primary', 'pay-button', { disabled: !isConfigured }]} href={isConfigured ? paymentUri(99) : undefined} data-pay-link aria-disabled={!isConfigured}>{isConfigured ? 'Open UPI app' : 'UPI setup required'} <span aria-hidden="true">→</span></a>
+            <p class="desktop-payment-hint" data-desktop-payment-hint>Scan the QR code with your phone to pay.</p>
+            <a class:list={['button', 'primary', 'pay-button', { disabled: !isConfigured }]} href={isConfigured ? paymentUri(99) : undefined} data-pay-link aria-disabled={!isConfigured} hidden>{isConfigured ? 'Open UPI app' : 'UPI setup required'} <span aria-hidden="true">→</span></a>
             <p class="payment-note">Confirm the payee and amount in your UPI app before approving. Payments are voluntary and non-refundable.</p>
           </div>
         </div>
@@ -51,7 +52,13 @@ const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?s
     const customAmount = document.querySelector('[data-custom-amount]');
     const qr = document.querySelector('[data-qr]');
     const payLink = document.querySelector('[data-pay-link]');
+    const desktopPaymentHint = document.querySelector('[data-desktop-payment-hint]');
     const display = document.querySelector('[data-display-amount]');
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isMobile && isConfigured) {
+      payLink.hidden = false;
+      desktopPaymentHint.hidden = true;
+    }
     const makeUri = (amount) => `upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: amount, cu: 'INR', tn: 'Support MCP Lab' })}`;
     const setAmount = (amount, selectedOption = null) => {
       options.forEach((item) => { item.classList.toggle('selected', item === selectedOption); item.setAttribute('aria-pressed', String(item === selectedOption)); });
@@ -59,7 +66,11 @@ const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?s
       const uri = makeUri(amount);
       qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(uri)}`;
       qr.alt = `UPI QR code to support MCP Lab with ₹${amount}`;
-      if (isConfigured) payLink.href = uri;
+      if (isConfigured) {
+        payLink.href = uri;
+        payLink.classList.remove('disabled');
+        payLink.setAttribute('aria-disabled', 'false');
+      }
     };
     options.forEach((option) => option.addEventListener('click', () => {
       customAmount.value = '';
