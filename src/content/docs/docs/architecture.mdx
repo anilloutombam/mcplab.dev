@@ -20,7 +20,7 @@ graph LR
     CLI --> Server
 ```
 
-*Figure 1. Current server and stdio transport architecture.*
+_Figure 1. Current server and stdio transport architecture._
 
 ## Scenario execution path
 
@@ -54,7 +54,7 @@ sequenceDiagram
     Runner->>Runner: Produce combined scenario recording
 ```
 
-*Figure 2. Primary and optional observer calls execute sequentially.*
+_Figure 2. Primary and optional observer calls execute sequentially._
 
 ## Responsibilities
 
@@ -89,7 +89,7 @@ flowchart TD
     AssertionFailure --> Final
 ```
 
-*Figure 3. Observer verification and failure handling.*
+_Figure 3. Observer verification and failure handling._
 
 :::note[Deliberate boundary]
 The current architecture is not a proxy and does not orchestrate external MCP clients. Streamable HTTP and target-client adapters are future work.

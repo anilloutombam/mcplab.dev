@@ -29,7 +29,10 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1731' } },
 				{ tag: 'meta', attrs: { property: 'og:image:height', content: '909' } },
 				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://mcplab.dev/og.png' } },
-				{ tag: 'script', content: `const storedTheme = localStorage.getItem('starlight-theme'); if (storedTheme !== 'light' && storedTheme !== 'dark') localStorage.setItem('starlight-theme', matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.addEventListener('DOMContentLoaded', () => document.querySelector('select[aria-label="Select theme"] option[value="auto"]')?.remove());` },
+				{
+					tag: 'script',
+					content: `const storedTheme = localStorage.getItem('starlight-theme'); if (storedTheme !== 'light' && storedTheme !== 'dark') localStorage.setItem('starlight-theme', matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); document.addEventListener('DOMContentLoaded', () => document.querySelector('select[aria-label="Select theme"] option[value="auto"]')?.remove());`,
+				},
 			],
 			social: [
 				{ icon: 'heart', label: 'Support MCP Lab', href: '/support' },
