@@ -19,6 +19,9 @@ export default defineConfig({
 			title: 'MCP Lab',
 			description: 'Deterministic failure testing for MCP systems.',
 			favicon: '/favicon.png',
+			components: {
+				Head: './src/components/StarlightHead.astro',
+			},
 			customCss: ['./src/styles/starlight.css'],
 			head: [
 				{ tag: 'meta', attrs: { name: 'theme-color', content: '#090a0c' } },
