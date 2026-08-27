@@ -5,85 +5,167 @@ const upiId = import.meta.env.PUBLIC_UPI_ID || 'your-upi-id@bank';
 const upiName = import.meta.env.PUBLIC_UPI_NAME || 'MCP Lab';
 const isConfigured = upiId !== 'your-upi-id@bank';
 const amounts = [49, 99];
-const paymentUri = (amount: number) => `upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: String(amount), cu: 'INR', tn: 'Support MCP Lab' })}`;
-const qrUrl = (amount: number) => `https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(paymentUri(amount))}`;
+const paymentUri = (amount: number) =>
+	`upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: String(amount), cu: 'INR', tn: 'Support MCP Lab' })}`;
+const qrUrl = (amount: number) =>
+	`https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(paymentUri(amount))}`;
 ---
-<SiteLayout title="Support MCP Lab" description="Support the continued development of MCP Lab through GitHub Sponsors or UPI." image="/og.png">
-  <main class="shell support-page">
-    <section class="support-hero">
-      <div class="kicker">MCP Lab / community supported</div>
-      <h1>Help keep failure testing open.</h1>
-      <p class="lede">MCP Lab is independent, open-source work. Your support helps fund maintenance, documentation, and the next set of deterministic failure scenarios.</p>
-    </section>
 
-    <section class="support-grid" aria-label="Support options">
-      <article class="support-card sponsor-card">
-        <div><p class="eyebrow">Global</p><h2>GitHub Sponsors</h2><p>Support ongoing development through GitHub with a one-time or recurring sponsorship.</p></div>
-        <a class="button primary" href="https://github.com/sponsors/anilloutombam" target="_blank" rel="noreferrer">Sponsor on GitHub <span aria-hidden="true">↗</span></a>
-      </article>
+<SiteLayout
+	title="Support MCP Lab"
+	description="Support the continued development of MCP Lab through GitHub Sponsors or UPI."
+	image="/og.png"
+>
+	<main class="shell support-page">
+		<section class="support-hero">
+			<div class="kicker">MCP Lab / community supported</div>
+			<h1>Help keep failure testing open.</h1>
+			<p class="lede">
+				MCP Lab is independent, open-source work. Your support helps fund maintenance, documentation, and the next set
+				of deterministic failure scenarios.
+			</p>
+		</section>
 
-      <article class="support-card upi-card">
-        <div><p class="eyebrow">India / UPI</p><h2>Buy the project some build time.</h2><p>Choose an amount, then scan the QR code or open your preferred UPI app on mobile.</p></div>
-        <div class="amount-picker" role="group" aria-label="Choose a support amount">
-          {amounts.map((amount, index) => <button class:list={['amount-option', { selected: index === 1 }]} type="button" data-amount={amount} aria-pressed={index === 1 ? 'true' : 'false'}>₹{amount}</button>)}
-          <label class="custom-amount"><span>Custom</span><span class="currency" aria-hidden="true">₹</span><input type="number" inputmode="numeric" min="1" max="100000" step="1" placeholder="Amount" aria-label="Custom support amount in rupees" data-custom-amount /></label>
-        </div>
-        <div class="upi-payment">
-          <div class="qr-frame">
-            <img src={qrUrl(99)} width="208" height="208" alt={`UPI QR code to support MCP Lab with ₹99`} data-qr loading="eager" />
-          </div>
-          <div class="upi-details">
-            <p class="payment-amount"><span data-display-amount>₹99</span> via UPI</p>
-            <p class="upi-id"><span>{upiId}</span></p>
-            <p class="desktop-payment-hint" data-desktop-payment-hint>Scan the QR code with your phone to pay.</p>
-            <a class:list={['button', 'primary', 'pay-button', { disabled: !isConfigured }]} href={isConfigured ? paymentUri(99) : undefined} data-pay-link aria-disabled={!isConfigured} hidden>{isConfigured ? 'Open UPI app' : 'UPI setup required'} <span aria-hidden="true">→</span></a>
-            <p class="payment-note">Confirm the payee and amount in your UPI app before approving. Payments are voluntary and non-refundable.</p>
-          </div>
-        </div>
-        {!isConfigured && <div class="notice"><strong>Preview mode.</strong> Set <code>PUBLIC_UPI_ID</code> before publishing to activate payment links and QR codes.</div>}
-      </article>
-    </section>
+		<section class="support-grid" aria-label="Support options">
+			<article class="support-card sponsor-card">
+				<div>
+					<p class="eyebrow">Global</p><h2>GitHub Sponsors</h2><p>
+						Support ongoing development through GitHub with a one-time or recurring sponsorship.
+					</p>
+				</div>
+				<a class="button primary" href="https://github.com/sponsors/anilloutombam" target="_blank" rel="noreferrer"
+					>Sponsor on GitHub <span aria-hidden="true">↗</span></a
+				>
+			</article>
 
-    <section class="support-footnote"><h2>Thank you.</h2><p>If financial support is not a fit, filing a clear issue, improving documentation, or sharing MCP Lab is just as valuable.</p><a class="button" href="https://github.com/anilloutombam/mcp-failure-lab/issues" target="_blank" rel="noreferrer">Contribute on GitHub <span aria-hidden="true">↗</span></a></section>
-  </main>
+			<article class="support-card upi-card">
+				<div>
+					<p class="eyebrow">India / UPI</p><h2>Buy the project some build time.</h2><p>
+						Choose an amount, then scan the QR code or open your preferred UPI app on mobile.
+					</p>
+				</div>
+				<div class="amount-picker" role="group" aria-label="Choose a support amount">
+					{
+						amounts.map((amount, index) => (
+							<button
+								class:list={['amount-option', { selected: index === 1 }]}
+								type="button"
+								data-amount={amount}
+								aria-pressed={index === 1 ? 'true' : 'false'}
+							>
+								₹{amount}
+							</button>
+						))
+					}
+					<label class="custom-amount"
+						><span>Custom</span><span class="currency" aria-hidden="true">₹</span><input
+							type="number"
+							inputmode="numeric"
+							min="1"
+							max="100000"
+							step="1"
+							placeholder="Amount"
+							aria-label="Custom support amount in rupees"
+							data-custom-amount
+						/></label
+					>
+				</div>
+				<div class="upi-payment">
+					<div class="qr-frame">
+						<img
+							src={qrUrl(99)}
+							width="208"
+							height="208"
+							alt={`UPI QR code to support MCP Lab with ₹99`}
+							data-qr
+							loading="eager"
+						/>
+					</div>
+					<div class="upi-details">
+						<p class="payment-amount"><span data-display-amount>₹99</span> via UPI</p>
+						<p class="upi-id"><span>{upiId}</span></p>
+						<p class="desktop-payment-hint" data-desktop-payment-hint>Scan the QR code with your phone to pay.</p>
+						<a
+							class:list={['button', 'primary', 'pay-button', { disabled: !isConfigured }]}
+							href={isConfigured ? paymentUri(99) : undefined}
+							data-pay-link
+							aria-disabled={!isConfigured}
+							hidden>{isConfigured ? 'Open UPI app' : 'UPI setup required'} <span aria-hidden="true">→</span></a
+						>
+						<p class="payment-note">
+							Confirm the payee and amount in your UPI app before approving. Payments are voluntary and non-refundable.
+						</p>
+					</div>
+				</div>
+				{
+					!isConfigured && (
+						<div class="notice">
+							<strong>Preview mode.</strong> Set <code>PUBLIC_UPI_ID</code> before publishing to activate payment links
+							and QR codes.
+						</div>
+					)
+				}
+			</article>
+		</section>
 
-  <script define:vars={{ upiId, upiName, isConfigured }}>
-    const options = document.querySelectorAll('[data-amount]');
-    const customAmount = document.querySelector('[data-custom-amount]');
-    const qr = document.querySelector('[data-qr]');
-    const payLink = document.querySelector('[data-pay-link]');
-    const desktopPaymentHint = document.querySelector('[data-desktop-payment-hint]');
-    const display = document.querySelector('[data-display-amount]');
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    if (isMobile && isConfigured) {
-      payLink.hidden = false;
-      desktopPaymentHint.hidden = true;
-    }
-    const makeUri = (amount) => `upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: amount, cu: 'INR', tn: 'Support MCP Lab' })}`;
-    const setAmount = (amount, selectedOption = null) => {
-      options.forEach((item) => { item.classList.toggle('selected', item === selectedOption); item.setAttribute('aria-pressed', String(item === selectedOption)); });
-      display.textContent = `₹${amount}`;
-      const uri = makeUri(amount);
-      qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(uri)}`;
-      qr.alt = `UPI QR code to support MCP Lab with ₹${amount}`;
-      if (isConfigured) {
-        payLink.href = uri;
-        payLink.classList.remove('disabled');
-        payLink.setAttribute('aria-disabled', 'false');
-      }
-    };
-    options.forEach((option) => option.addEventListener('click', () => {
-      customAmount.value = '';
-      setAmount(option.dataset.amount, option);
-    }));
-    customAmount.addEventListener('input', () => {
-      const amount = Number(customAmount.value);
-      const valid = Number.isInteger(amount) && amount >= 1 && amount <= 100000;
-      customAmount.setAttribute('aria-invalid', String(!valid && customAmount.value !== ''));
-      if (valid) setAmount(String(amount));
-      else if (isConfigured) payLink.removeAttribute('href');
-      payLink.classList.toggle('disabled', !valid || !isConfigured);
-      payLink.setAttribute('aria-disabled', String(!valid || !isConfigured));
-    });
-  </script>
+		<section class="support-footnote">
+			<h2>Thank you.</h2><p>
+				If financial support is not a fit, filing a clear issue, improving documentation, or sharing MCP Lab is just as
+				valuable.
+			</p><a
+				class="button"
+				href="https://github.com/anilloutombam/mcp-failure-lab/issues"
+				target="_blank"
+				rel="noreferrer">Contribute on GitHub <span aria-hidden="true">↗</span></a
+			>
+		</section>
+	</main>
+
+	<script define:vars={{ upiId, upiName, isConfigured }}>
+		const options = document.querySelectorAll('[data-amount]');
+		const customAmount = document.querySelector('[data-custom-amount]');
+		const qr = document.querySelector('[data-qr]');
+		const payLink = document.querySelector('[data-pay-link]');
+		const desktopPaymentHint = document.querySelector('[data-desktop-payment-hint]');
+		const display = document.querySelector('[data-display-amount]');
+		const isMobile =
+			/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+			(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+		if (isMobile && isConfigured) {
+			payLink.hidden = false;
+			desktopPaymentHint.hidden = true;
+		}
+		const makeUri = (amount) =>
+			`upi://pay?${new URLSearchParams({ pa: upiId, pn: upiName, am: amount, cu: 'INR', tn: 'Support MCP Lab' })}`;
+		const setAmount = (amount, selectedOption = null) => {
+			options.forEach((item) => {
+				item.classList.toggle('selected', item === selectedOption);
+				item.setAttribute('aria-pressed', String(item === selectedOption));
+			});
+			display.textContent = `₹${amount}`;
+			const uri = makeUri(amount);
+			qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&format=png&margin=12&data=${encodeURIComponent(uri)}`;
+			qr.alt = `UPI QR code to support MCP Lab with ₹${amount}`;
+			if (isConfigured) {
+				payLink.href = uri;
+				payLink.classList.remove('disabled');
+				payLink.setAttribute('aria-disabled', 'false');
+			}
+		};
+		options.forEach((option) =>
+			option.addEventListener('click', () => {
+				customAmount.value = '';
+				setAmount(option.dataset.amount, option);
+			}),
+		);
+		customAmount.addEventListener('input', () => {
+			const amount = Number(customAmount.value);
+			const valid = Number.isInteger(amount) && amount >= 1 && amount <= 100000;
+			customAmount.setAttribute('aria-invalid', String(!valid && customAmount.value !== ''));
+			if (valid) setAmount(String(amount));
+			else if (isConfigured) payLink.removeAttribute('href');
+			payLink.classList.toggle('disabled', !valid || !isConfigured);
+			payLink.setAttribute('aria-disabled', String(!valid || !isConfigured));
+		});
+	</script>
 </SiteLayout>

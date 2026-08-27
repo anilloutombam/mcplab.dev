@@ -41,7 +41,7 @@ flowchart TD
     Response --> Evaluation[Future AGI Evaluation]
 ```
 
-*Figure 1. External validation path for the `hang` fault.*
+_Figure 1. External validation path for the `hang` fault._
 
 ### What was validated
 

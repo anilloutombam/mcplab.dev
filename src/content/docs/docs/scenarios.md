@@ -7,14 +7,14 @@ A scenario describes one primary tool call, its deadline, and the expected obser
 
 ```json
 {
-  "name": "bounded delay succeeds",
-  "call": { "tool": "delay", "args": { "delayMs": 250 } },
-  "timeoutMs": 1000,
-  "expect": {
-    "outcome": "success",
-    "maxDurationMs": 500,
-    "result": { "isError": false, "textContains": "\"status\":\"delayed\"" }
-  }
+	"name": "bounded delay succeeds",
+	"call": { "tool": "delay", "args": { "delayMs": 250 } },
+	"timeoutMs": 1000,
+	"expect": {
+		"outcome": "success",
+		"maxDurationMs": 500,
+		"result": { "isError": false, "textContains": "\"status\":\"delayed\"" }
+	}
 }
 ```
 
@@ -26,18 +26,18 @@ Use `observe` to make a separate call after the primary path. The calls are sequ
 
 ```json
 {
-  "name": "server remains responsive after a delay",
-  "call": { "tool": "delay", "args": { "delayMs": 250 } },
-  "timeoutMs": 1000,
-  "expect": { "outcome": "success" },
-  "observe": {
-    "call": { "tool": "ping", "args": {} },
-    "timeoutMs": 1000,
-    "expect": {
-      "outcome": "success",
-      "result": { "isError": false, "textContains": "\"status\":\"ok\"" }
-    }
-  }
+	"name": "server remains responsive after a delay",
+	"call": { "tool": "delay", "args": { "delayMs": 250 } },
+	"timeoutMs": 1000,
+	"expect": { "outcome": "success" },
+	"observe": {
+		"call": { "tool": "ping", "args": {} },
+		"timeoutMs": 1000,
+		"expect": {
+			"outcome": "success",
+			"result": { "isError": false, "textContains": "\"status\":\"ok\"" }
+		}
+	}
 }
 ```
 

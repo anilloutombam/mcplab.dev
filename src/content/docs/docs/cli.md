@@ -34,10 +34,10 @@ Console is the default. Pass `--report json` for machine-readable scenario resul
 
 ## Exit codes
 
-| Code | Meaning |
-| --- | --- |
-| `0` | All expectations passed |
-| `2` | Scenario ran, but one or more assertions failed |
-| `1` | Scenario could not be loaded or executed |
+| Code | Meaning                                         |
+| ---- | ----------------------------------------------- |
+| `0`  | All expectations passed                         |
+| `2`  | Scenario ran, but one or more assertions failed |
+| `1`  | Scenario could not be loaded or executed        |
 
 JSON command error codes are `invalid_arguments`, `scenario_load_failed`, and `scenario_execution_failed`.

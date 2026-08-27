@@ -7,11 +7,11 @@ The console reporter shows the scenario name, observed outcome, duration, assert
 
 ```json
 {
-  "name": "bounded delay succeeds",
-  "outcome": "success",
-  "durationMs": 251.25,
-  "passed": true,
-  "failures": []
+	"name": "bounded delay succeeds",
+	"outcome": "success",
+	"durationMs": 251.25,
+	"passed": true,
+	"failures": []
 }
 ```
 
