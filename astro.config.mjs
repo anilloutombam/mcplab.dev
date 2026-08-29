@@ -52,6 +52,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Fault Tools', slug: 'docs/fault-tools' },
 						{ label: 'CLI', slug: 'docs/cli' },
+						{ label: 'Streamable HTTP', slug: 'docs/streamable-http' },
 						{ label: 'Reporting', slug: 'docs/reporting' },
 					],
 				},

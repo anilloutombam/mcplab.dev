@@ -28,6 +28,14 @@ The process waits silently for a client. Protocol messages use stdout, so operat
 
 The stdio server supports MCP `2026-07-28` and retains `2025-11-25` compatibility.
 
+## Start the Streamable HTTP server
+
+```sh
+npx mcp-failure-lab serve --transport http
+```
+
+The server listens at `http://127.0.0.1:3000/mcp` by default. Keep it bound to loopback unless a trusted reverse proxy provides authentication and TLS. See [Streamable HTTP](/docs/streamable-http/) for configuration and Inspector setup.
+
 ## Run an included scenario
 
 From a repository checkout:

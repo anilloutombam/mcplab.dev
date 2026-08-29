@@ -19,6 +19,21 @@ npx mcp-failure-lab serve
 
 Starts the MCP server over stdio and waits for a client.
 
+Select Streamable HTTP explicitly:
+
+```sh
+npx mcp-failure-lab serve --transport http
+```
+
+| Option        | Default       | Description                 |
+| ------------- | ------------- | --------------------------- |
+| `--transport` | `stdio`       | `stdio` or `http`           |
+| `--host`      | `127.0.0.1`   | HTTP bind host              |
+| `--port`      | `3000`        | HTTP listener port          |
+| `--path`      | `/mcp`        | Streamable HTTP endpoint    |
+
+`--host`, `--port`, and `--path` require `--transport http`.
+
 ## `run`
 
 ```sh

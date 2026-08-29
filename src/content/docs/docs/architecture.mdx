@@ -5,22 +5,26 @@ description: How Failure Lab separates server construction, transport, tools, an
 
 ## Server and transport path
 
-The built-in server exposes the same registered tools to an MCP host or Inspector over stdio. The SDK v2 `serveStdio` entry owns protocol negotiation and serves `2026-07-28` and compatible `2025-11-25` clients from the same server factory.
+The `serve` command exposes the same registered tools over stdio or Streamable HTTP. Stdio remains the default. Both transports reuse `createServer`, so fault behavior is defined once.
 
 ```mermaid
 graph LR
-    Host[MCP Host or Inspector] <--> Entry[serveStdio]
-    Entry <--> Server[MCP Failure Lab Server]
+    Host[MCP Host or Inspector] <--> Stdio[stdio entry]
+    HttpClient[HTTP MCP Client] <--> Http[Streamable HTTP entry]
+    Stdio <--> Server[MCP Failure Lab Server]
+    Http <--> Server
     Server --> Registration[Tool Registration]
     Registration --> Ping[ping]
     Registration --> Delay[delay]
     Registration --> Hang[hang]
     Registration --> Disconnect[disconnect]
-    CLI[CLI serve command] --> Entry
-    CLI --> Server
+    CLI[CLI serve command] --> Stdio
+    CLI --> Http
 ```
 
-_Figure 1. Current server and stdio transport architecture._
+_Figure 1. Stdio and Streamable HTTP share one server factory._
+
+The public HTTP entry serves `2026-07-28` per request and provides stateless `2025-11-25` compatibility. It validates the endpoint path and the `Host` and `Origin` headers before dispatching into the SDK handler. The default listener is `127.0.0.1:3000`, and wildcard binds are rejected.
 
 ## Scenario execution path
 
@@ -58,15 +62,15 @@ _Figure 2. Primary and optional observer calls execute sequentially._
 
 ## Responsibilities
 
-The stdio server path separates five responsibilities:
+The server path separates five responsibilities:
 
 1. The CLI parses commands and starts `serve`.
-2. `serveStdio` negotiates the protocol era and exchanges MCP messages over stdin and stdout.
+2. The selected transport exchanges MCP messages over stdio or Streamable HTTP.
 3. `createServer` constructs the server without starting I/O.
 4. `ping` supplies a deterministic health path.
 5. `delay`, `hang`, and `disconnect` reproduce controlled failures.
 
-Server construction and execution stay separate so the stdio entry and built-in scenario handler can reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr.
+Server construction and execution stay separate so both public transports and the built-in scenario handler reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr. HTTP shutdown stops new ingress, closes the listener, and releases active MCP resources.
 
 ## Primary and observer calls
 
@@ -92,5 +96,5 @@ flowchart TD
 _Figure 3. Observer verification and failure handling._
 
 :::note[Deliberate boundary]
-The current architecture is not a proxy and does not orchestrate external MCP clients. Streamable HTTP and target-client adapters are future work.
+The current architecture is not a proxy and does not orchestrate external MCP clients. Target-client adapters remain future work.
 :::

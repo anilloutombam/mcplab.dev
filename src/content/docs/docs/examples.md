@@ -18,6 +18,15 @@ npx @modelcontextprotocol/inspector npx mcp-failure-lab serve
 
 Connect with stdio, list tools, select `ping`, and run it. Do not share temporary authentication tokens embedded in Inspector URLs.
 
+To inspect Streamable HTTP, start Failure Lab and Inspector in separate terminals:
+
+```sh
+npx mcp-failure-lab serve --transport http
+npx @modelcontextprotocol/inspector@latest
+```
+
+Add `http://127.0.0.1:3000/mcp` as a Streamable HTTP server. See [Streamable HTTP](/docs/streamable-http/) for protocol-mode guidance.
+
 ## Observer verification
 
 ```sh
