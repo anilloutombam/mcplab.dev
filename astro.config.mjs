@@ -18,7 +18,7 @@ export default defineConfig({
 		starlight({
 			title: 'MCP Lab',
 			description: 'Deterministic failure testing for MCP systems.',
-			favicon: '/favicon.png',
+			favicon: '/favicon.ico',
 			components: {
 				Head: './src/components/StarlightHead.astro',
 			},
