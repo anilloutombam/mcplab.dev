@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: Diagnose common setup, stdio, timeout, and assertion issues.
+description: Diagnose common setup, transport, timeout, and assertion issues.
 ---
 
 ## The command does not start
@@ -15,6 +15,24 @@ npx mcp-failure-lab --help
 ## `serve` appears silent
 
 That is expected. The stdio server waits for an MCP client and keeps stdout clean for protocol messages. Connect with MCP Inspector or another stdio-capable client.
+
+## The HTTP endpoint does not start
+
+Confirm that HTTP was selected explicitly and that the port is available:
+
+```sh
+npx mcp-failure-lab serve --transport http
+```
+
+The default endpoint is `http://127.0.0.1:3000/mcp`. HTTP-specific host, port, and path options are rejected in stdio mode.
+
+## Inspector tool calls time out in Modern mode
+
+Inspector 2.4 can time out on sessionless Modern Streamable HTTP tool calls. Use Legacy mode for manual Inspector checks. The server's Modern `2026-07-28` path can be verified with a direct SDK client.
+
+## `disconnect` reports `fetch failed`
+
+That is the expected HTTP fault. `disconnect` terminates the active request before a tool result is returned. The HTTP listener stays running, so a later `ping` from a new request can succeed.
 
 ## A scenario times out unexpectedly
 

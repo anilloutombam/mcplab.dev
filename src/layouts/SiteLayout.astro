@@ -13,7 +13,12 @@ const path = Astro.url.pathname;
 		><meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><meta
 			name="theme-color"
 			content="#090a0c"
-		/><meta name="description" content={description} /><link rel="icon" type="image/png" href="/favicon.png" /><link
+		/><meta name="description" content={description} /><link rel="icon" href="/favicon.ico" sizes="any" /><link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="/favicon-32x32.png"
+		/><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" /><link
 			rel="canonical"
 			href={canonical}
 		/><meta property="og:type" content="website" /><meta property="og:site_name" content="MCP Lab" /><meta
@@ -42,9 +47,13 @@ const path = Astro.url.pathname;
 		<header class="site-header">
 			<div class="shell">
 				<nav class="nav" aria-label="Main navigation">
-					<a class="brand" href="/" aria-label="MCP Lab home"><span class="mark"></span><span>MCP LAB</span></a><div
-						class="links"
-					>
+					<a class="brand" href="/" aria-label="MCP Failure Lab home"
+						><img
+							class="brand-mark brand-logo-dark"
+							src="/brand/mcp-failure-lab-mark-dark.svg"
+							alt="MCP Failure Lab"
+						/><img class="brand-mark brand-logo-light" src="/brand/mcp-failure-lab-mark-light.svg" alt="" /></a
+					><div class="links">
 						<a class="nav-link" href="/failure" aria-current={path.startsWith('/failure') ? 'page' : undefined}
 							>Failure Lab</a
 						><a class="nav-link" href="/docs" aria-current={path.startsWith('/docs') ? 'page' : undefined}>Docs</a><a
@@ -69,9 +78,13 @@ const path = Astro.url.pathname;
 		<footer class="site-footer">
 			<div class="shell footer-grid">
 				<div>
-					<a class="brand footer-brand" href="/"><span class="mark"></span><span>MCP LAB</span></a><p>
-						Open-source tools for testing failure behavior in MCP systems.
-					</p>
+					<a class="brand footer-brand" href="/" aria-label="MCP Failure Lab home"
+						><img
+							class="brand-logo brand-logo-dark"
+							src="/brand/mcp-failure-lab-logo-dark.svg"
+							alt="MCP Failure Lab"
+						/><img class="brand-logo brand-logo-light" src="/brand/mcp-failure-lab-logo-light.svg" alt="" /></a
+					><p>Open-source tools for testing failure behavior in MCP systems.</p>
 				</div><div class="footer-links">
 					<div>
 						<strong>Project</strong><a href="/failure">Failure Lab</a><a href="/docs/getting-started">Getting started</a

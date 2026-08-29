@@ -49,18 +49,18 @@ body {
 	backdrop-filter: blur(16px);
 }
 .site-title {
-	gap: 0.65rem;
-	font-family: var(--sl-font-mono);
-	letter-spacing: 0.12em;
-	font-size: 0.78rem;
+	font-size: 0;
 }
 .site-title:before {
 	content: '';
-	width: 17px;
-	height: 17px;
+	display: block;
+	width: 40px;
+	height: 40px;
 	flex: 0 0 auto;
-	border: 1px solid var(--sl-color-accent);
-	background: linear-gradient(var(--sl-color-accent), var(--sl-color-accent)) right 3px bottom 3px/4px 4px no-repeat;
+	background: url('/brand/mcp-failure-lab-mark-dark.svg') center/contain no-repeat;
+}
+:root[data-theme='light'] .site-title:before {
+	background-image: url('/brand/mcp-failure-lab-mark-light.svg');
 }
 .sidebar-pane {
 	border-color: var(--sl-color-gray-5);
