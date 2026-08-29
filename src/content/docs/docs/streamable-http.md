@@ -13,12 +13,12 @@ The default endpoint is `http://127.0.0.1:3000/mcp`.
 
 ## Configuration
 
-| Option        | Default       | Purpose                    |
-| ------------- | ------------- | -------------------------- |
-| `--transport` | `stdio`       | Select `stdio` or `http`.  |
-| `--host`      | `127.0.0.1`   | HTTP bind host.            |
-| `--port`      | `3000`        | HTTP listener port.        |
-| `--path`      | `/mcp`        | Streamable HTTP endpoint.  |
+| Option        | Default     | Purpose                   |
+| ------------- | ----------- | ------------------------- |
+| `--transport` | `stdio`     | Select `stdio` or `http`. |
+| `--host`      | `127.0.0.1` | HTTP bind host.           |
+| `--port`      | `3000`      | HTTP listener port.       |
+| `--path`      | `/mcp`      | Streamable HTTP endpoint. |
 
 HTTP-specific options require `--transport http`. The host, port, and path are validated before the listener starts.
 

@@ -25,12 +25,12 @@ Select Streamable HTTP explicitly:
 npx mcp-failure-lab serve --transport http
 ```
 
-| Option        | Default       | Description                 |
-| ------------- | ------------- | --------------------------- |
-| `--transport` | `stdio`       | `stdio` or `http`           |
-| `--host`      | `127.0.0.1`   | HTTP bind host              |
-| `--port`      | `3000`        | HTTP listener port          |
-| `--path`      | `/mcp`        | Streamable HTTP endpoint    |
+| Option        | Default     | Description              |
+| ------------- | ----------- | ------------------------ |
+| `--transport` | `stdio`     | `stdio` or `http`        |
+| `--host`      | `127.0.0.1` | HTTP bind host           |
+| `--port`      | `3000`      | HTTP listener port       |
+| `--path`      | `/mcp`      | Streamable HTTP endpoint |
 
 `--host`, `--port`, and `--path` require `--transport http`.
 

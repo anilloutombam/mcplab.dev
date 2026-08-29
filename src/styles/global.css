@@ -101,6 +101,11 @@ button:focus-visible {
 	width: 168px;
 	height: auto;
 }
+.brand-mark {
+	display: block;
+	width: 40px;
+	height: 40px;
+}
 [data-theme='dark'] .brand-logo-light,
 [data-theme='light'] .brand-logo-dark {
 	display: none;
