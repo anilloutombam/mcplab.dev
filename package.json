@@ -17,11 +17,11 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/starlight": "^0.41.7",
+		"@astrojs/starlight": "^0.41.9",
 		"@vercel/analytics": "^2.0.1",
-		"astro": "^7.1.6",
+		"astro": "^7.2.9",
 		"astro-mermaid": "^2.1.0",
-		"mermaid": "^11.17.0",
+		"mermaid": "^11.17.2",
 		"sharp": "^0.35.3"
 	},
 	"devDependencies": {
