@@ -49,8 +49,8 @@ Assertions: <span class="token-pass">passed</span></pre>
 		<section class="section">
 			<h2 class="section-title">Execution model</h2>
 			<p class="section-intro">
-				Each scenario runs against Failure Lab’s built-in server. The primary call and optional observer call are
-				sequential and use the same MCP client connection.
+				Each scenario runs against Failure Lab’s built-in server or a configured external HTTP or stdio MCP target. The
+				primary call and optional observer call are sequential and use the same MCP client connection.
 			</p>
 			<table class="capabilities">
 				<thead><tr><th>Stage</th><th>Responsibility</th><th>Implemented</th></tr></thead><tbody>
@@ -104,8 +104,8 @@ Assertions: <span class="token-pass">passed</span></pre>
 
 		<section class="section">
 			<div class="notice">
-				<strong>Current boundary.</strong> External client orchestration, JUnit reports, malformed messages, duplicate responses,
-				and session-loss faults are not implemented.
+				<strong>Current boundary.</strong> External HTTP and stdio MCP targets are supported. JUnit reports, malformed messages,
+				duplicate responses, and session-loss faults are not implemented.
 			</div><div class="actions">
 				<a class="button primary" href="/docs/getting-started">Read the documentation</a><a
 					class="button"

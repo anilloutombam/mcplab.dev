@@ -39,9 +39,17 @@ npx mcp-failure-lab serve --transport http
 ```sh
 npm run dev -- run examples/scenarios/delay-success.json
 npm run dev -- run examples/scenarios/delay-success.json --report json
+npm run dev -- run path/to/scenario.json --target path/to/target.json
 ```
 
-The current `run` command uses the built-in Failure Lab server. It does not orchestrate an external MCP host.
+Without `--target`, the command uses the built-in Failure Lab server. With `--target`, it resolves
+the configured adapter and runs against an external MCP server. See
+[External MCP targets](/docs/external-targets/).
+
+| Option     | Default   | Description                        |
+| ---------- | --------- | ---------------------------------- |
+| `--report` | `console` | `console` or `json`                |
+| `--target` | none      | External target configuration file |
 
 ## Reporting
 
@@ -55,4 +63,5 @@ Console is the default. Pass `--report json` for machine-readable scenario resul
 | `2`  | Scenario ran, but one or more assertions failed |
 | `1`  | Scenario could not be loaded or executed        |
 
-JSON command error codes are `invalid_arguments`, `scenario_load_failed`, and `scenario_execution_failed`.
+JSON command error codes are `invalid_arguments`, `scenario_load_failed`, `target_load_failed`, and
+`scenario_execution_failed`.
