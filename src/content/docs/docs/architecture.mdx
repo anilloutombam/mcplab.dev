@@ -129,7 +129,9 @@ and cleanup occur.
 
 The orchestrator must request cleanup after every successful setup, including when execution,
 observation, or cancellation fails. Adapter cleanup must be idempotent so repeated or concurrent
-requests have the same externally visible effect as a single request.
+requests have the same externally visible effect as a single request. The MCP adapter aborts active
+requests when cancellation is requested. During Streamable HTTP cleanup, it explicitly terminates
+the remote session before closing the client, with both operations sharing the cleanup deadline.
 
 The contract and deterministic test adapter live in:
 

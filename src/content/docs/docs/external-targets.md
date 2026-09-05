@@ -197,8 +197,9 @@ External execution records adapter operations in order:
 1. `setup` starts or connects to the target and waits for MCP initialization.
 2. `execute` invokes the primary scenario call.
 3. `observe` runs when the scenario contains an observer.
-4. `cancel` is requested after a bounded operation times out.
-5. `cleanup` runs after every successful setup.
+4. `cancel` aborts active MCP requests after a bounded operation times out.
+5. `cleanup` runs after every successful setup. Streamable HTTP cleanup terminates the remote
+   session before closing the client, and the complete cleanup sequence is deadline-bound.
 
 Console and JSON output distinguish scenario assertions from adapter infrastructure health. An
 assertion can fail even when every adapter operation succeeds. Conversely, cleanup or transport
