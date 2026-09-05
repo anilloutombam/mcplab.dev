@@ -62,16 +62,17 @@ name of an environment variable.
 The optional `cwd` field selects the child process working directory. The adapter owns the process
 and connection created during setup and closes them during cleanup.
 
-## GitLab, Stripe, and custom MCP servers
+## Provider-neutral MCP targets
 
 Use the URL or launch command supplied by the MCP provider. The scenario's `call.tool` must match a
 tool returned by that server's `tools/list`; its `call.args` must satisfy that tool's input schema.
 Provider credentials should be supplied through environment-backed headers or the stdio process
 environment.
 
-Failure Lab does not hard-code GitLab, Stripe, or provider-specific tool names. The `mcp` adapter
-works at the MCP transport boundary, while the adapter registry allows additional adapters to be
-introduced without changing scenario command orchestration.
+Failure Lab does not hard-code provider-specific tool names. The `mcp` adapter works at the MCP
+transport boundary, while the adapter registry allows additional adapters to be introduced without
+changing scenario command orchestration. The examples below cover GitLab and GitHub because both
+have been verified end to end. Other providers can use the same HTTP or stdio target format.
 
 ## GitLab MCP server
 
@@ -102,13 +103,41 @@ npm run dev -- run examples/scenarios/gitlab-search-projects.json \
   --report json
 ```
 
-On the first connection, complete the GitLab authorization in the browser. GitLab MCP must also be
-enabled for the applicable GitLab group or instance. The server is currently documented by GitLab
-as beta, so verify the available tool names in Inspector if the example reports an unknown tool.
+On the first connection, complete the GitLab authorization in the browser. On GitLab.com, you must
+also own an eligible top-level group and enable **Allow connection to GitLab** under **Settings →
+General → Permissions and group features → MCP client access**. The setting is not available from a
+project or subgroup. Private Free-tier groups with more than five users are read-only and cannot be
+used until their seat count is reduced, their visibility is changed appropriately, or their
+subscription is upgraded.
 
-For browser-first validation, connect MCP Inspector directly to the GitLab HTTP endpoint and
-complete its OAuth flow. Confirm that the `search` tool is available before running the included
-scenario. Exercise caution with data returned from repositories you do not trust.
+After authentication, a `404 Not Found` response from `POST /api/v4/mcp` usually means the account
+has no MCP-enabled top-level group. Confirm the group setting above, then clear stale `mcp-remote`
+authentication if another authorization attempt is required:
+
+```sh
+rm -rf ~/.mcp-auth/mcp-remote*
+```
+
+For browser-first validation, start MCP Inspector with the same stdio bridge:
+
+```sh
+npx -y @modelcontextprotocol/inspector \
+  npx -y mcp-remote@latest \
+  https://gitlab.com/api/v4/mcp
+```
+
+Connect, open **Tools**, list the available tools, and invoke `search` with:
+
+```json
+{
+	"scope": "projects",
+	"search": "mcp-test-project",
+	"per_page": 5
+}
+```
+
+Replace the search text with a project you can access. Exercise caution with data returned from
+repositories you do not trust.
 
 ## GitHub MCP server
 
@@ -164,6 +193,11 @@ A successful result contains `setup`, `execute`, and `cleanup` diagnostics with 
 The scenario calls only `get_me`; it does not create or modify GitHub resources. Use a token with
 the minimum permissions required by the tools you intend to test, and never commit the token or a
 literal authorization header.
+
+For browser-first validation, run `npx -y @modelcontextprotocol/inspector`, choose Streamable HTTP,
+and connect to `https://api.githubcopilot.com/mcp/`. Add the same `Authorization` and `X-MCP-Tools`
+headers used by `examples/targets/github-http.json`, list the tools, and invoke the read-only
+`get_me` tool. Do not share or capture the authorization value.
 
 GitHub also publishes a local stdio server as `ghcr.io/github/github-mcp-server`. Use the remote
 example above for the shortest verification path; use the local image when testing process startup
