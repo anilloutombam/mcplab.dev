@@ -92,6 +92,8 @@ MCP RESULT: hang timed out as expected
 
 A successful fault reproduction means the server started, MCP initialization succeeded, `hang` was discoverable, and the independent client reached its configured timeout. Agent behavior after that timeout is evaluated separately.
 
-The example currently validates only the `hang` fault. It does not add external-client orchestration to Failure Lab.
+This older integration example validates only the `hang` fault through its own adapter. For the
+built-in external-target runner, use `run --target` as described in
+[External MCP targets](/docs/external-targets/).
 
 See [`examples/integrations/futureagi`](https://github.com/anilloutombam/mcp-failure-lab/tree/main/examples/integrations/futureagi) for the adapter, complete setup notes, and reproduction steps.

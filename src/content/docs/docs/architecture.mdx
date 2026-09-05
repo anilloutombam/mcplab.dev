@@ -97,9 +97,10 @@ _Figure 3. Observer verification and failure handling._
 
 ## Target-client adapter boundary
 
-The target-client adapter contract is the foundation for future external-client orchestration. It
-is generic: the core does not contain branches for particular MCP hosts, clients, servers, or
-transports.
+The target-client adapter contract provides external-target orchestration. It is generic: the core
+does not contain branches for particular MCP hosts, clients, servers, or transports. The CLI loads
+a strict target configuration, resolves its provider through the adapter registry, and receives a
+runner that keeps the validated configuration paired with its adapter.
 
 ```mermaid
 flowchart LR
@@ -128,7 +129,9 @@ and cleanup occur.
 
 The orchestrator must request cleanup after every successful setup, including when execution,
 observation, or cancellation fails. Adapter cleanup must be idempotent so repeated or concurrent
-requests have the same externally visible effect as a single request.
+requests have the same externally visible effect as a single request. The MCP adapter aborts active
+requests when cancellation is requested. During Streamable HTTP cleanup, it explicitly terminates
+the remote session before closing the client, with both operations sharing the cleanup deadline.
 
 The contract and deterministic test adapter live in:
 
@@ -140,7 +143,7 @@ src/testing/deterministicFakeTargetClientAdapter.ts
 The fake performs no I/O and models operation timing from a supplied plan. It tests the boundary
 without duplicating the server’s fault implementations.
 
-:::note[Current limitation]
-The adapter contract is available, but the CLI does not yet orchestrate external MCP clients. MCP
-Failure Lab is not a proxy, and it does not include special handling for any third-party MCP host.
+:::note[Provider neutrality]
+The built-in `mcp` adapter supports Streamable HTTP and stdio targets. Failure Lab is not a proxy
+and does not include special handling for GitLab, Stripe, or another provider.
 :::

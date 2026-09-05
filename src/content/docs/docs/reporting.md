@@ -23,6 +23,10 @@ npm run dev -- run examples/scenarios/delay-observe-ping.json --report json
 
 Input and execution failures also produce JSON when JSON reporting is selected. Reporters return formatted output to the command layer; they do not write to stdout themselves.
 
+External runs include an `execution` object containing the adapter name, adapter lifecycle status,
+and ordered diagnostics for setup, execution, observation, cancellation, and cleanup. Adapter
+failures remain separate from the scenario's `failures` array, which contains assertion failures.
+
 :::note
 JUnit output is planned, not implemented.
 :::
