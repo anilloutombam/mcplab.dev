@@ -205,8 +205,8 @@ and stdio cleanup behavior.
 
 ## Validate the connection in a browser
 
-The Failure Lab runner currently reports through the console or JSON; it does not include a browser
-dashboard. Use the official MCP Inspector for interactive connection and tool-call validation:
+The Failure Lab runner does not include a browser dashboard. Use the official MCP Inspector for
+interactive connection and tool-call validation:
 
 ```sh
 npx @modelcontextprotocol/inspector
@@ -235,9 +235,10 @@ External execution records adapter operations in order:
 5. `cleanup` runs after every successful setup. Streamable HTTP cleanup terminates the remote
    session before closing the client, and the complete cleanup sequence is deadline-bound.
 
-Console and JSON output distinguish scenario assertions from adapter infrastructure health. An
-assertion can fail even when every adapter operation succeeds. Conversely, cleanup or transport
-failure marks the run unsuccessful without presenting it as a scenario assertion failure.
+Console, JSON, and JUnit output distinguish scenario assertions from adapter infrastructure health.
+An assertion can fail even when every adapter operation succeeds. Conversely, cleanup or transport
+failure marks the run unsuccessful without presenting it as a scenario assertion failure. JUnit
+uses separate primary, observer, and execution test cases.
 
 ## Troubleshooting
 

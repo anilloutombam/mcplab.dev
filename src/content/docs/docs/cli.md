@@ -39,6 +39,7 @@ npx mcp-failure-lab serve --transport http
 ```sh
 npm run dev -- run examples/scenarios/delay-success.json
 npm run dev -- run examples/scenarios/delay-success.json --report json
+npm run --silent dev -- run examples/scenarios/delay-success.json --report junit > junit.xml
 npm run dev -- run path/to/scenario.json --target path/to/target.json
 ```
 
@@ -48,12 +49,13 @@ the configured adapter and runs against an external MCP server. See
 
 | Option     | Default   | Description                        |
 | ---------- | --------- | ---------------------------------- |
-| `--report` | `console` | `console` or `json`                |
+| `--report` | `console` | `console`, `json`, or `junit`      |
 | `--target` | none      | External target configuration file |
 
 ## Reporting
 
-Console is the default. Pass `--report json` for machine-readable scenario results and command errors.
+Console is the default. Pass `--report json` for structured data or `--report junit` for JUnit XML.
+JUnit output is written to stdout.
 
 ## Exit codes
 
@@ -64,4 +66,4 @@ Console is the default. Pass `--report json` for machine-readable scenario resul
 | `1`  | Scenario could not be loaded or executed        |
 
 JSON command error codes are `invalid_arguments`, `scenario_load_failed`, `target_load_failed`, and
-`scenario_execution_failed`.
+`scenario_execution_failed`. JUnit represents the same command failures as `<error>` results.

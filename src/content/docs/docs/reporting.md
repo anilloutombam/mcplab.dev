@@ -1,9 +1,10 @@
 ---
 title: Reporting
-description: Console and JSON output from scenario execution.
+description: Console, JSON, and JUnit XML output from scenario execution.
 ---
 
-The console reporter shows the scenario name, observed outcome, duration, assertion status, and failures. The JSON reporter emits a stable machine-readable structure.
+The console reporter shows the scenario name, observed outcome, duration, assertion status, and
+failures. The JSON reporter emits a stable machine-readable structure.
 
 ```json
 {
@@ -27,6 +28,29 @@ External runs include an `execution` object containing the adapter name, adapter
 and ordered diagnostics for setup, execution, observation, cancellation, and cleanup. Adapter
 failures remain separate from the scenario's `failures` array, which contains assertion failures.
 
-:::note
-JUnit output is planned, not implemented.
-:::
+## JUnit XML
+
+Generate a JUnit report from a repository checkout with:
+
+```sh
+npm run --silent dev -- run examples/scenarios/delay-success.json --report junit > junit.xml
+```
+
+`--silent` prevents npm's command banner from being written before the XML declaration. The report
+is written to stdout; redirect it to a file for CI upload.
+
+| Scenario result        | JUnit representation           |
+| ---------------------- | ------------------------------ |
+| Expectations pass      | Passing `<testcase>`           |
+| Assertion fails        | `<failure>`                    |
+| Execution fails        | `<error>`                      |
+| Observer is configured | Separate observer `<testcase>` |
+
+Primary, observer, and adapter execution cases use separate class names. Durations are written in
+seconds. External suite duration uses the adapter lifecycle total so execute and observe time is not
+counted twice. Failed cases include their failure details, and non-success adapter operations include
+their lifecycle diagnostics. Scenario names, messages, and diagnostics are escaped before they are
+written to XML.
+
+Command failures, including invalid arguments and scenario or target loading errors, are emitted as
+JUnit `<error>` results when `--report junit` is selected.
