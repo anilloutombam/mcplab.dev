@@ -38,6 +38,7 @@ npx mcp-failure-lab serve --transport http
 
 ```sh
 npm run dev -- run examples/scenarios/delay-success.json
+npm run dev -- run examples/scenarios/malformed-message.json
 npm run dev -- run examples/scenarios/delay-success.json --report json
 npm run --silent dev -- run examples/scenarios/delay-success.json --report junit > junit.xml
 npm run dev -- run path/to/scenario.json --target path/to/target.json
@@ -46,6 +47,9 @@ npm run dev -- run path/to/scenario.json --target path/to/target.json
 Without `--target`, the command uses the built-in Failure Lab server. With `--target`, it resolves
 the configured adapter and runs against an external MCP server. See
 [External MCP targets](/docs/external-targets/).
+
+The malformed-message example expects a protocol error followed by a successful observer call.
+See [Fault Tools](/docs/fault-tools/#malformed_message) for its inputs and expected output.
 
 | Option     | Default   | Description                        |
 | ---------- | --------- | ---------------------------------- |

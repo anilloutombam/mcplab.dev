@@ -24,7 +24,11 @@ HTTP-specific options require `--transport http`. The host, port, and path are v
 
 ## Protocol behavior
 
-The endpoint serves MCP `2026-07-28` and provides stateless compatibility for `2025-11-25`. Both paths use the same server factory and expose the same `ping`, `delay`, `hang`, and `disconnect` tools.
+The endpoint serves MCP `2026-07-28` and provides stateless compatibility for `2025-11-25`. Both paths use the same server factory and expose `ping`, `delay`, `hang`, `disconnect`, and `malformed_message`.
+
+`malformed_message` changes only the activating request's response. Modern JSON responses and
+legacy SSE response events use the same fault rules. Unrelated SSE events remain unchanged. See
+[Fault Tools](/docs/fault-tools/#malformed_message) for variants and validation steps.
 
 Calling `disconnect` terminates its active HTTP request instead of returning a normal tool result. The listener remains available for later requests.
 

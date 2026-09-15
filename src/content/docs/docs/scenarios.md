@@ -42,3 +42,8 @@ Use `observe` to make a separate call after the primary path. The calls are sequ
 ```
 
 The observer runs even if the primary call errors or times out. An observer timeout, connection failure, or thrown error always fails verification.
+
+For malformed responses, expect a primary `error` and use `ping` as the observer to confirm the fault
+did not affect later calls. A protocol error is not a valid tool result with `isError: true`, so do
+not add result assertions to that primary call. See the
+[malformed-message example](/docs/fault-tools/#run-from-the-cli).

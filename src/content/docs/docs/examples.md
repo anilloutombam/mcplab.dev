@@ -3,12 +3,27 @@ title: Examples
 description: Included scenarios, observer verification, Inspector, and Future AGI validation.
 ---
 
-The repository includes four scenario files:
+The repository includes these scenario files:
 
 - `delay-success.json` — bounded delay with outcome and duration checks
 - `delay-result.json` — MCP result assertions
 - `hang-timeout.json` — expected timeout from the hanging tool
 - `delay-observe-ping.json` — post-condition verification through `ping`
+- `malformed-message.json` — invalid JSON-RPC response followed by a successful `ping`
+- `github-get-me.json` — read-only authenticated-user call against GitHub MCP
+- `gitlab-search-projects.json` — read-only project search against GitLab MCP
+
+See [External MCP targets](/docs/external-targets/) for the GitHub and GitLab target configurations.
+
+## Malformed response verification
+
+```sh
+npm run dev -- run examples/scenarios/malformed-message.json
+```
+
+The primary call should report `error`, the observer should report `success`, and assertions should
+pass. See [Fault Tools](/docs/fault-tools/#malformed_message) for the scenario JSON, variants, and
+Inspector checks.
 
 ## Verify with MCP Inspector
 
