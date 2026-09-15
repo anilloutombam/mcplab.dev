@@ -36,6 +36,10 @@ That is the expected HTTP fault. `disconnect` terminates the active request befo
 
 ## A scenario times out unexpectedly
 
+For `malformed_message`, a timeout can be expected: some clients ignore an invalid response and
+leave the request pending. Other clients reject it immediately. Run `ping` afterward to check that
+the connection remains usable. The built-in CLI client reports an `error` for `missing-jsonrpc`.
+
 Check the scenario’s `timeoutMs` against the requested delay. When omitted, the CLI uses 30 seconds for each primary or observer call.
 
 ## Result text does not match
@@ -44,7 +48,9 @@ Check the scenario’s `timeoutMs` against the requested delay. When omitted, th
 
 ## The observer failed after disconnect
 
-Observer calls reuse the same MCP client connection. Because `disconnect` closes that transport, the observer cannot verify state afterward.
+Over stdio, observer calls reuse the connection that `disconnect` closed, so verification fails.
+Over HTTP, `disconnect` terminates the active request instead of the listener. If the observer still
+fails, check whether the client remains usable after that request failure.
 
 ## JSON output is not valid
 

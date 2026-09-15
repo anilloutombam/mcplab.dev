@@ -48,8 +48,9 @@ is written to stdout; redirect it to a file for CI upload.
 
 Primary, observer, and adapter execution cases use separate class names. Durations are written in
 seconds. External suite duration uses the adapter lifecycle total so execute and observe time is not
-counted twice. Failed cases include their failure details, and non-success adapter operations include
-their lifecycle diagnostics. Scenario names, messages, and diagnostics are escaped before they are
+counted twice. Failed cases include their failure details. The execution testcase includes every
+adapter operation's status and duration in `<system-out>`, including successful operations.
+Scenario names, messages, and diagnostics are escaped before they are
 written to XML.
 
 Command failures, including invalid arguments and scenario or target loading errors, are emitted as

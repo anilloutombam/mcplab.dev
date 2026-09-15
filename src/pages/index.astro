@@ -10,10 +10,11 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 	<main class="shell">
 		<section class="hero">
 			<div class="kicker">MCP Lab / open-source testing tools</div>
-			<h1>Test MCP timeout, cancellation, and disconnect handling.</h1>
+			<h1>Test MCP timeouts, disconnects, and malformed responses.</h1>
 			<p class="lede">
 				MCP Lab develops focused tools for reproducing failure conditions in Model Context Protocol systems. The first
-				project, MCP Failure Lab, runs deterministic scenarios against a purpose-built MCP server.
+				project, MCP Failure Lab, runs deterministic scenarios against its built-in server or a configured external MCP
+				target.
 			</p>
 			<div class="actions">
 				<a class="button primary" href="/docs/getting-started">Getting started</a><a
@@ -92,6 +93,10 @@ Assertions: <span class="token-pass">passed</span></pre>
 							><span class="tag">available</span></td
 						></tr
 					>
+					<tr>
+						<td>malformed_message</td><td>One request-scoped response with an invalid JSON-RPC envelope.</td>
+						<td><span class="tag">available</span></td>
+					</tr>
 					<tr
 						><td>reporting</td><td>Console and stable JSON output with CI-oriented exit codes.</td><td
 							><span class="tag">available</span></td

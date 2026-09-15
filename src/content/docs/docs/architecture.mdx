@@ -18,6 +18,7 @@ graph LR
     Registration --> Delay[delay]
     Registration --> Hang[hang]
     Registration --> Disconnect[disconnect]
+    Registration --> Malformed[malformed_message]
     CLI[CLI serve command] --> Stdio
     CLI --> Http
 ```
@@ -28,7 +29,7 @@ The public HTTP entry serves `2026-07-28` per request and provides stateless `20
 
 ## Scenario execution path
 
-Failure Lab uses a real MCP client/server path. Built-in scenarios target `2026-07-28` through the SDK v2 in-process HTTP handler. This handler is internal to scenario execution; it does not expose a public HTTP endpoint. Fault behavior lives in the registered tools rather than in a proxy or a second simulation layer.
+Failure Lab uses a real MCP client/server path. Built-in scenarios target `2026-07-28` through the SDK v2 in-process HTTP handler. This handler is internal to scenario execution; it does not expose a public HTTP endpoint. Tool handlers activate faults; malformed responses are changed at the transport boundary rather than returned as ordinary tool errors.
 
 ```mermaid
 sequenceDiagram
@@ -69,6 +70,11 @@ The server path separates five responsibilities:
 3. `createServer` constructs the server without starting I/O.
 4. `ping` supplies a deterministic health path.
 5. `delay`, `hang`, and `disconnect` reproduce controlled failures.
+
+`malformed_message` activates a one-shot fault using the current request ID. The stdio transport
+decorator changes the matching outbound response. The HTTP wrapper changes a matching JSON
+response or SSE response event. HTTP controllers are request-scoped; stdio controllers belong to
+the connection. Neither path changes unrelated responses.
 
 Server construction and execution stay separate so both public transports and the built-in scenario handler reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr. HTTP shutdown stops new ingress, closes the listener, and releases active MCP resources.
 

@@ -47,4 +47,5 @@ npm install
 npm run dev -- run examples/scenarios/delay-success.json
 ```
 
-Next: learn the [scenario format](/docs/scenarios/).
+Next: learn the [scenario format](/docs/scenarios/) or try the
+[malformed-response fault](/docs/fault-tools/#malformed_message).
