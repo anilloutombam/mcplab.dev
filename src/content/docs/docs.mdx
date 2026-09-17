@@ -29,6 +29,9 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 	<Card title="Report clearly" icon="document">
 		Produce console, JSON, or JUnit XML output.
 	</Card>
+	<Card title="Check compatibility" icon="approve-check">
+		Review black-box results from official MCP clients over stdio and Streamable HTTP.
+	</Card>
 </CardGrid>
 
 ## Protocol compatibility
@@ -40,6 +43,9 @@ servers also accept `2025-11-25` clients for compatibility.
 The fault tools keep the same user-facing behavior across both protocol eras.
 Protocol features that depend on the older server-initiated request model are
 outside the current fault set.
+
+See [External compatibility](/docs/compatibility/) for the versioned client matrix and known
+transport-specific behavior.
 
 :::note[Current scope]
 Failure Lab runs scenarios against its built-in server or a configured external HTTP or stdio MCP
