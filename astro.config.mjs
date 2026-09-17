@@ -58,6 +58,7 @@ export default defineConfig({
 						{ label: 'Getting Started', slug: 'docs/getting-started' },
 						{ label: 'Scenarios', slug: 'docs/scenarios' },
 						{ label: 'External MCP targets', slug: 'docs/external-targets' },
+						{ label: 'External compatibility', slug: 'docs/compatibility' },
 					],
 				},
 				{
