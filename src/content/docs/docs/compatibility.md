@@ -20,6 +20,8 @@ failure handling without a change to MCP Failure Lab.
 | Official TypeScript SDK |  1.30.0 | `2025-11-25`                                      |
 | Official Python SDK     |   2.2.0 | `2026-07-28`                                      |
 | Official Go SDK         |   1.7.0 | `2026-07-28`                                      |
+| Official Rust SDK       |   3.4.0 | `2026-07-28`                                      |
+| Official C# SDK         |   2.2.0 | `2026-07-28`                                      |
 | MCP Inspector CLI       |   2.7.0 | `2025-11-25` and `2026-07-28`                     |
 
 The repository baseline passed all 207 tests across 30 files, and the tag build matched the npm
@@ -27,15 +29,15 @@ artifact in every repeated check.
 
 ## Compatibility summary
 
-| Behavior                                         | TypeScript |   Python |                 Go |                                    Inspector |
-| ------------------------------------------------ | ---------: | -------: | -----------------: | -------------------------------------------: |
-| Initialize, call `ping`, and list tools          |       Pass |     Pass |               Pass |                                         Pass |
-| Bounded delay                                    |       Pass |     Pass |               Pass |                                         Pass |
-| Delay/hang timeout and later recovery            |       Pass |     Pass |               Pass |         One-shot CLI has no per-call timeout |
-| Detect missing/invalid `jsonrpc` and recover     |       Pass |     Pass | **Session closes** | Detected; required an external process bound |
-| Detect result-with-error and recover             |       Pass |     Pass |               Pass |                      Not separately repeated |
-| Observe an injected disconnect                   |       Pass |     Pass |               Pass |            Not automated in the one-shot CLI |
-| Recover on the same HTTP client after disconnect |       Pass | **Fail** |               Pass |              Unsupported by the one-shot CLI |
+| Behavior                                         | TypeScript |   Python |                 Go |                Rust |   C# |                                    Inspector |
+| ------------------------------------------------ | ---------: | -------: | -----------------: | ------------------: | ---: | -------------------------------------------: |
+| Initialize, call `ping`, and list tools          |       Pass |     Pass |               Pass |                Pass | Pass |                                         Pass |
+| Bounded delay                                    |       Pass |     Pass |               Pass |                Pass | Pass |                                         Pass |
+| Delay/hang timeout and later recovery            |       Pass |     Pass |               Pass |                Pass | Pass |         One-shot CLI has no per-call timeout |
+| Detect missing/invalid `jsonrpc` and recover     |       Pass |     Pass | **Session closes** |                Pass | Pass | Detected; required an external process bound |
+| Reject result-with-error and recover             |       Pass |     Pass |               Pass | **Accepted result** | Pass |                      Not separately repeated |
+| Observe an injected disconnect                   |       Pass |     Pass |               Pass |                Pass | Pass |            Not automated in the one-shot CLI |
+| Recover on the same HTTP client after disconnect |       Pass | **Fail** |               Pass |                Pass | Pass |              Unsupported by the one-shot CLI |
 
 ## Python HTTP disconnect result
 
@@ -58,6 +60,15 @@ Protocol-level HTTP ping is not included as a failure. The Go client negotiated 
 whose schema no longer includes that method. The existing report
 [modelcontextprotocol/go-sdk#1249](https://github.com/modelcontextprotocol/go-sdk/issues/1249)
 was closed on that basis. The Failure Lab `ping` tool passed over both transports.
+
+## Rust and C# results
+
+Rust `rmcp` 3.4.0 and C# `ModelContextProtocol` 2.2.0 passed normal calls, delay and hang
+cancellation, request recovery, malformed-version detection, and HTTP disconnect recovery.
+C# rejected the response containing both `result` and `error`. Rust instead accepted that
+invalid JSON-RPC response as a successful result over both transports, while the following normal
+request still succeeded. This is classified as an external Rust SDK validation gap, not a Failure
+Lab defect.
 
 For the full matrix, release identity, interpretation, and exact reproducer, read the
 [versioned 0.9.0 report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/v0.9.0.md).
