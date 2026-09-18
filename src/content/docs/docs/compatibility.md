@@ -68,7 +68,8 @@ cancellation, request recovery, malformed-version detection, and HTTP disconnect
 C# rejected the response containing both `result` and `error`. Rust instead accepted that
 invalid JSON-RPC response as a successful result over both transports, while the following normal
 request still succeeded. This is classified as an external Rust SDK validation gap, not a Failure
-Lab defect.
+Lab defect, and is tracked as
+[modelcontextprotocol/rust-sdk#1283](https://github.com/modelcontextprotocol/rust-sdk/issues/1283).
 
 For the full matrix, release identity, interpretation, and exact reproducer, read the
 [versioned 0.9.0 report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/v0.9.0.md).
