@@ -47,3 +47,8 @@ For malformed responses, expect a primary `error` and use `ping` as the observer
 did not affect later calls. A protocol error is not a valid tool result with `isError: true`, so do
 not add result assertions to that primary call. See the
 [malformed-message example](/docs/fault-tools/#run-from-the-cli).
+
+For duplicate responses, expect the primary call to succeed and use `ping` as the observer to
+confirm the connection remains usable. The scenario runner records the first tool result; use MCP
+Inspector or client diagnostics to verify how a client handles the second response. See the
+[duplicate-response example](/docs/fault-tools/#duplicate_response).

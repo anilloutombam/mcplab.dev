@@ -21,7 +21,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		Define a tool call, timeout, and expectations in JSON.
 	</Card>
 	<Card title="Inject a fault" icon="warning">
-		Use delay, hang, disconnect, or malformed_message to exercise recovery paths.
+		Use delay, hang, disconnect, malformed_message, or duplicate_response to exercise recovery paths.
 	</Card>
 	<Card title="Verify state" icon="approve-check">
 		Add a sequential observer call such as `ping`.
@@ -49,6 +49,6 @@ transport-specific behavior.
 
 :::note[Current scope]
 Failure Lab runs scenarios against its built-in server or a configured external HTTP or stdio MCP
-target. Malformed JSON-RPC responses are supported. Duplicate-response and session-loss faults
-are not implemented.
+target. The built-in server provides malformed and duplicate JSON-RPC response faults. Session-loss
+faults are not implemented.
 :::

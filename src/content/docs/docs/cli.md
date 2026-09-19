@@ -39,6 +39,7 @@ npx mcp-failure-lab serve --transport http
 ```sh
 npm run dev -- run examples/scenarios/delay-success.json
 npm run dev -- run examples/scenarios/malformed-message.json
+npm run dev -- run examples/scenarios/duplicate-response.json
 npm run dev -- run examples/scenarios/delay-success.json --report json
 npm run --silent dev -- run examples/scenarios/delay-success.json --report junit > junit.xml
 npm run dev -- run path/to/scenario.json --target path/to/target.json

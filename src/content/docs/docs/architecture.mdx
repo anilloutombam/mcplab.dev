@@ -19,6 +19,7 @@ graph LR
     Registration --> Hang[hang]
     Registration --> Disconnect[disconnect]
     Registration --> Malformed[malformed_message]
+    Registration --> Duplicate[duplicate_response]
     CLI[CLI serve command] --> Stdio
     CLI --> Http
 ```
@@ -75,6 +76,10 @@ The server path separates five responsibilities:
 decorator changes the matching outbound response. The HTTP wrapper changes a matching JSON
 response or SSE response event. HTTP controllers are request-scoped; stdio controllers belong to
 the connection. Neither path changes unrelated responses.
+
+`duplicate_response` uses the same request-scoped activation boundary. Stdio writes the matching
+response twice. HTTP converts a matching JSON response into two SSE events or duplicates the
+matching event in an existing SSE stream. Both payloads preserve the original request ID.
 
 Server construction and execution stay separate so both public transports and the built-in scenario handler reuse the same server configuration. When stdio is active, stdout is reserved for MCP traffic and diagnostics go to stderr. HTTP shutdown stops new ingress, closes the listener, and releases active MCP resources.
 
