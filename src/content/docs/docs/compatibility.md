@@ -113,3 +113,12 @@ For the full matrix, release identity, interpretation, and exact reproducer, rea
 
 Compatibility reports supplement the project test suite. They are not a promise that untested
 client versions or host applications will behave the same way.
+
+## Decision-layer experiments
+
+Decision-layer experiments ask how downstream systems act on MCP failure evidence. They are kept
+separate from client compatibility results because they do not test protocol conformance.
+
+Read the [Jev 1.13 recovery-evidence experiment](/docs/jev-recovery-experiment/) for a controlled
+A/B test showing how successful recovery evidence changed `accept`, `retry`, and `reject`
+decisions.
