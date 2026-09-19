@@ -1,6 +1,6 @@
 ---
 title: Fault Tools
-description: Reference for ping, delay, hang, disconnect, and malformed_message.
+description: Reference for ping, delay, hang, disconnect, malformed_message, and duplicate_response.
 ---
 
 ## `ping`
@@ -95,3 +95,38 @@ npx @modelcontextprotocol/inspector npx mcp-failure-lab serve
 Connect, open **Tools**, select `malformed_message`, and run it with one of the variants above.
 Inspector may report a protocol error or wait until its request timeout. Then run `ping`: it should
 succeed. Repeat with the other variants to check how the client handles each violation.
+
+## `duplicate_response`
+
+Sends the same JSON-RPC tool result twice with the same request ID. The first response can resolve
+the call; the second tests whether the client safely handles an already-settled response.
+
+```json
+{}
+```
+
+Each invocation adds exactly one duplicate to its own response. At most 128 activations can be
+pending. Stdio sends both responses directly. Streamable HTTP returns two SSE message events,
+including on the legacy HTTP path. Pending stdio activations are cleared when the transport closes;
+HTTP state is scoped to the request.
+
+Clients may ignore the second response, report a protocol error, or close the connection. Run
+`ping` afterward to verify whether later requests still work.
+
+### Run from the CLI
+
+```sh
+npm run dev -- run examples/scenarios/duplicate-response.json
+```
+
+The included scenario expects the tool call and following `ping` observer to succeed with the MCP
+TypeScript client.
+
+### Check in MCP Inspector
+
+```sh
+npx @modelcontextprotocol/inspector npx mcp-failure-lab serve
+```
+
+Connect, open **Tools**, select `duplicate_response`, and call it with `{}`. Note whether Inspector
+returns the first result, reports the duplicate, or closes the connection. Then run `ping`.

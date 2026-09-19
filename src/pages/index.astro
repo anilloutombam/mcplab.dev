@@ -10,7 +10,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 	<main class="shell">
 		<section class="hero">
 			<div class="kicker">MCP Lab / open-source testing tools</div>
-			<h1>Test MCP timeouts, disconnects, and malformed responses.</h1>
+			<h1>Test MCP timeouts, disconnects, and protocol response faults.</h1>
 			<p class="lede">
 				MCP Lab develops focused tools for reproducing failure conditions in Model Context Protocol systems. The first
 				project, MCP Failure Lab, runs deterministic scenarios against its built-in server or a configured external MCP
@@ -95,6 +95,10 @@ Assertions: <span class="token-pass">passed</span></pre>
 					>
 					<tr>
 						<td>malformed_message</td><td>One request-scoped response with an invalid JSON-RPC envelope.</td>
+						<td><span class="tag">available</span></td>
+					</tr>
+					<tr>
+						<td>duplicate_response</td><td>The same JSON-RPC result emitted twice for one request.</td>
 						<td><span class="tag">available</span></td>
 					</tr>
 					<tr

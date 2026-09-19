@@ -10,6 +10,7 @@ The repository includes these scenario files:
 - `hang-timeout.json` — expected timeout from the hanging tool
 - `delay-observe-ping.json` — post-condition verification through `ping`
 - `malformed-message.json` — invalid JSON-RPC response followed by a successful `ping`
+- `duplicate-response.json` — repeated JSON-RPC response followed by a successful `ping`
 - `github-get-me.json` — read-only authenticated-user call against GitHub MCP
 - `gitlab-search-projects.json` — read-only project search against GitLab MCP
 
@@ -24,6 +25,15 @@ npm run dev -- run examples/scenarios/malformed-message.json
 The primary call should report `error`, the observer should report `success`, and assertions should
 pass. See [Fault Tools](/docs/fault-tools/#malformed_message) for the scenario JSON, variants, and
 Inspector checks.
+
+## Duplicate response verification
+
+```sh
+npm run dev -- run examples/scenarios/duplicate-response.json
+```
+
+The primary call and later `ping` should succeed. See
+[Fault Tools](/docs/fault-tools/#duplicate_response) for transport behavior and Inspector checks.
 
 ## Verify with MCP Inspector
 
@@ -78,7 +88,10 @@ The initial validation used:
 - the real `hang` tool
 - a three-second client-side timeout
 
-The independent client started the published package through `npx`, initialized an MCP session, discovered the four built-in tools, invoked `hang`, and observed the request remain pending until the client timeout. The same interaction was then exercised from a Future AGI simulation.
+The independent client started the published package through `npx`, initialized an MCP session,
+discovered the tools available in that release, invoked `hang`, and observed the request remain
+pending until the client timeout. The same interaction was then exercised from a Future AGI
+simulation.
 
 Ten generated simulation calls completed. The evaluator also identified cases where the deliberately simple adapter became repetitive after the timeout. This distinction matters: Failure Lab reproduced the fault, while the external framework evaluated the agent's response.
 

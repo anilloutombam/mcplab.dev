@@ -42,6 +42,12 @@ the connection remains usable. The built-in CLI client reports an `error` for `m
 
 Check the scenario’s `timeoutMs` against the requested delay. When omitted, the CLI uses 30 seconds for each primary or observer call.
 
+## `duplicate_response` appears to succeed normally
+
+That can be expected. A client may resolve the first response and silently ignore the second. Run
+`ping` afterward to check whether the connection remains usable. Use Inspector or client logs when
+you need to see whether the duplicate produced a protocol diagnostic.
+
 ## Result text does not match
 
 `textContains` is case-sensitive and inspects only MCP content items with type `text`. It does not search arbitrary serialized result fields.

@@ -7,6 +7,9 @@ The `run` command can execute a scenario against Failure Lab's built-in server o
 external MCP target. External execution uses the same calls, expectations, observer behavior, exit
 codes, and reports as built-in execution.
 
+Built-in fault tools such as `malformed_message` and `duplicate_response` modify Failure Lab's own
+transports. They are not injected into external MCP targets.
+
 ## Run an external target
 
 Pass a target configuration separately from the scenario:

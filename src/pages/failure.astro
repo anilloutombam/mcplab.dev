@@ -12,8 +12,8 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 			<div class="kicker">MCP Lab / MCP Failure Lab</div>
 			<h1>Deterministic failure scenarios for MCP servers.</h1>
 			<p class="lede">
-				Reproduce delay, hanging requests, cancellation, transport loss, and malformed JSON-RPC responses through a real
-				MCP client/server execution path.
+				Reproduce delay, hanging requests, cancellation, transport loss, and malformed or duplicate JSON-RPC responses
+				through a real MCP client/server execution path.
 			</p>
 			<div class="actions">
 				<a class="button primary" href="/docs/getting-started">Install and run</a><a
@@ -104,8 +104,8 @@ Assertions: <span class="token-pass">passed</span></pre>
 
 		<section class="section">
 			<div class="notice">
-				<strong>Current boundary.</strong> External HTTP and stdio MCP targets and malformed JSON-RPC responses are supported.
-				Duplicate responses and session-loss faults are not implemented.
+				<strong>Current boundary.</strong> External HTTP and stdio MCP targets are supported. The built-in server provides
+				malformed and duplicate JSON-RPC response faults. Session-loss faults are not implemented.
 			</div><div class="actions">
 				<a class="button primary" href="/docs/getting-started">Read the documentation</a><a
 					class="button"
