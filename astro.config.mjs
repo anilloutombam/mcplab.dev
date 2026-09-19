@@ -59,6 +59,7 @@ export default defineConfig({
 						{ label: 'Scenarios', slug: 'docs/scenarios' },
 						{ label: 'External MCP targets', slug: 'docs/external-targets' },
 						{ label: 'External compatibility', slug: 'docs/compatibility' },
+						{ label: 'Jev recovery experiment', slug: 'docs/jev-recovery-experiment' },
 					],
 				},
 				{
