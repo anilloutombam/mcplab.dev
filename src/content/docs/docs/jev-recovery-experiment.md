@@ -31,6 +31,10 @@ Jev received normalized operational evidence only:
 MCP Failure Lab expectations and assertion results were excluded. This prevents “the injected fault
 occurred as expected” from being mistaken for “the agent should continue.”
 
+Before every Jev request, the harness validated the actual MCP Failure Lab report: the primary
+outcome and result, assertion state, and any recovery observer `ping`. A mismatch aborted the run.
+Assertion metadata served only as an internal validation guard and was never shown to Jev.
+
 ## Results
 
 | Scenario                       | Choices across 20 runs | P(accept) | P(retry) | P(reject) | Confidence |
