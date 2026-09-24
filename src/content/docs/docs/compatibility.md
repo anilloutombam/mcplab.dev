@@ -11,6 +11,59 @@ These results apply to the exact versions listed below. A later client release c
 failure handling without a change to MCP Failure Lab.
 :::
 
+## Open-source project tests
+
+These tests used the published `mcp-failure-lab@0.10.0` package. They did not use a local Failure
+Lab build.
+
+| Project                                                                                                |   Version | Tested paths              | Result                                    |
+| ------------------------------------------------------------------------------------------------------ | --------: | ------------------------- | ----------------------------------------- |
+| [`sparfenyuk/mcp-proxy`](https://github.com/sparfenyuk/mcp-proxy)                                      |    0.12.0 | stdio ↔ Streamable HTTP   | Two reproducible issues                   |
+| [Official Everything server](https://github.com/modelcontextprotocol/servers/tree/main/src/everything) | 2026.8.31 | stdio and Streamable HTTP | One stdio cancellation/cleanup limitation |
+| [`supercorp-ai/supergateway`](https://github.com/supercorp-ai/supergateway)                            |     4.0.0 | stdio ↔ Streamable HTTP   | No defect found                           |
+
+### `mcp-proxy` 0.12.0
+
+Baseline calls, bounded delay, timeout recovery, malformed-response isolation, and normal cleanup
+passed.
+
+Two failures reproduced:
+
+1. A clean install resolved Python MCP SDK 2.2.0 and failed at startup with
+   `ImportError: cannot import name 'request_ctx'`. Pinning `mcp>=1.27.1,<2` allowed the tests to
+   run.
+2. A transport disconnect was not recovered. HTTP-to-stdio mode exited on an unhandled
+   `RemoteProtocolError`. In the reverse direction, the proxy stayed up but did not restart the
+   exited stdio child.
+
+[Full `mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/mcp-proxy-0.12.0.md)
+
+### Everything server 2026.8.31
+
+Baseline calls, a bounded long-running operation, input-error recovery, and same-session recovery
+after timeout passed over stdio and Streamable HTTP.
+
+After a two-second operation was cancelled at 400 ms, stdio client cleanup did not complete within
+the 400 ms cleanup limit. The result reproduced three times. The same HTTP test cleaned up normally.
+The published long-running tool waits on timers and does not check cancellation.
+
+The server has no tools for forced disconnects or malformed responses, so those cases were not run.
+
+[Full Everything server report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/everything-server-2026.8.31.md)
+
+### Supergateway 4.0.0
+
+Both Streamable HTTP/stdio bridge directions passed baseline, delay, timeout recovery, duplicate
+response, malformed response, and normal cleanup tests.
+
+For HTTP-to-stdio, a forced upstream disconnect returned an error and the same stdio session passed
+the next call. For stdio-to-HTTP, the disconnect removed the affected stateful session; a new
+session started a new child and passed.
+
+No Supergateway defect was reproduced.
+
+[Full Supergateway report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/supergateway-4.0.0.md)
+
 ## 0.10.0 duplicate-response results
 
 The published `mcp-failure-lab@0.10.0` package was tested with `duplicate_response` followed by a
