@@ -11,6 +11,108 @@ These results apply to the exact versions listed below. A later client release c
 failure handling without a change to MCP Failure Lab.
 :::
 
+## Open-source project tests
+
+These tests used the published `mcp-failure-lab@0.10.0` package. They did not use a local Failure
+Lab build.
+
+| Project                                                                                                |   Version | Tested paths              | Result                                    |
+| ------------------------------------------------------------------------------------------------------ | --------: | ------------------------- | ----------------------------------------- |
+| [GitHub MCP Server](https://github.com/github/github-mcp-server)                                       |    1.12.2 | stdio and hosted HTTP     | No defect found                           |
+| [`sparfenyuk/mcp-proxy`](https://github.com/sparfenyuk/mcp-proxy)                                      |    0.12.0 | stdio ↔ Streamable HTTP   | Two reproducible issues                   |
+| [`tbxark/mcp-proxy`](https://github.com/tbxark/mcp-proxy)                                              |     1.1.0 | stdio → Streamable HTTP   | No defect found                           |
+| [`punkpeye/mcp-proxy`](https://github.com/punkpeye/mcp-proxy)                                          |    6.7.19 | stdio → Streamable HTTP   | Disconnect recovery failed                |
+| [Official Everything server](https://github.com/modelcontextprotocol/servers/tree/main/src/everything) | 2026.8.31 | stdio and Streamable HTTP | One stdio cancellation/cleanup limitation |
+| [`supercorp-ai/supergateway`](https://github.com/supercorp-ai/supergateway)                            |     4.0.0 | stdio ↔ Streamable HTTP   | No defect found                           |
+
+### GitHub MCP Server 1.12.2
+
+The hosted Streamable HTTP endpoint passed four authenticated `get_me` runs. Missing and invalid
+authorization values were rejected, and the `X-MCP-Tools` allowlist excluded an unlisted tool.
+
+The official 1.12.2 release binary passed three read-only `get_me` runs over stdio. Setup, calls,
+and cleanup completed normally. No GitHub MCP Server defect was reproduced.
+
+The server does not expose Failure Lab fault tools, so injected delay, malformed-response,
+duplicate-response, and forced-disconnect cases were not available.
+
+[Full GitHub MCP Server report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/github-mcp-server-1.12.2.md)
+
+### `mcp-proxy` 0.12.0
+
+Baseline calls, bounded delay, timeout recovery, malformed-response isolation, and normal cleanup
+passed.
+
+Two failures reproduced:
+
+1. A clean install resolved Python MCP SDK 2.2.0 and failed at startup with
+   `ImportError: cannot import name 'request_ctx'`. Pinning `mcp>=1.27.1,<2` allowed the tests to
+   run.
+2. A transport disconnect was not recovered. HTTP-to-stdio mode exited on an unhandled
+   `RemoteProtocolError`. In the reverse direction, the proxy stayed up but did not restart the
+   exited stdio child.
+
+Upstream tracking:
+
+- [Dependency incompatibility #235](https://github.com/sparfenyuk/mcp-proxy/issues/235)
+- [HTTP/SSE reconnection #75](https://github.com/sparfenyuk/mcp-proxy/issues/75)
+- [Exited stdio child #247](https://github.com/sparfenyuk/mcp-proxy/issues/247)
+
+[Full `mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/mcp-proxy-0.12.0.md)
+
+### `tbxark/mcp-proxy` 1.1.0
+
+Two Failure Lab stdio servers were mounted behind separate Streamable HTTP routes. Baseline, delay,
+timeout recovery, duplicate and malformed responses, and graceful shutdown passed.
+
+When the primary child exited, its request failed with `transport closed`. The control route stayed
+available. With automatic reconnect enabled and a 250 ms probe interval, the proxy rebuilt the
+primary child after three failed probes and new sessions passed.
+
+No `tbxark/mcp-proxy` defect was reproduced.
+
+[Full `tbxark/mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/tbxark-mcp-proxy-1.1.0.md)
+
+### `punkpeye/mcp-proxy` 6.7.19
+
+Baseline, delay, timeout recovery, duplicate response, malformed response, and cleanup passed over
+stateful Streamable HTTP.
+
+After the stdio child disconnected, current and new sessions failed with `Not connected`. The proxy
+stayed running but did not restart the child.
+
+[Upstream issue #112](https://github.com/punkpeye/mcp-proxy/issues/112)
+
+[Full `punkpeye/mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/punkpeye-mcp-proxy-6.7.19.md)
+
+### Everything server 2026.8.31
+
+Baseline calls, a bounded long-running operation, input-error recovery, and same-session recovery
+after timeout passed over stdio and Streamable HTTP.
+
+After a two-second operation was cancelled at 400 ms, stdio client cleanup did not complete within
+the 400 ms cleanup limit. The result reproduced three times. The same HTTP test cleaned up normally.
+The published long-running tool waits on timers and does not check cancellation.
+
+[Upstream issue #4846](https://github.com/modelcontextprotocol/servers/issues/4846)
+
+The server has no tools for forced disconnects or malformed responses, so those cases were not run.
+
+[Full Everything server report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/everything-server-2026.8.31.md)
+
+### Supergateway 4.0.0
+
+Both Streamable HTTP/stdio bridge directions passed baseline, delay, timeout recovery, duplicate
+response, malformed response, and normal cleanup tests.
+
+For HTTP-to-stdio, a forced upstream disconnect returned an error and the same stdio session passed
+the next call. For stdio-to-HTTP, the disconnect removed the affected stateful session; a new
+session started a new child and passed.
+
+No Supergateway defect was reproduced.
+
+[Full Supergateway report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/supergateway-4.0.0.md)
+
 ## 0.10.0 duplicate-response results
 
 The published `mcp-failure-lab@0.10.0` package was tested with `duplicate_response` followed by a
