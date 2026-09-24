@@ -36,6 +36,12 @@ Two failures reproduced:
    `RemoteProtocolError`. In the reverse direction, the proxy stayed up but did not restart the
    exited stdio child.
 
+Upstream tracking:
+
+- [Dependency incompatibility #235](https://github.com/sparfenyuk/mcp-proxy/issues/235)
+- [HTTP/SSE reconnection #75](https://github.com/sparfenyuk/mcp-proxy/issues/75)
+- [Exited stdio child #247](https://github.com/sparfenyuk/mcp-proxy/issues/247)
+
 [Full `mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/mcp-proxy-0.12.0.md)
 
 ### Everything server 2026.8.31
@@ -46,6 +52,8 @@ after timeout passed over stdio and Streamable HTTP.
 After a two-second operation was cancelled at 400 ms, stdio client cleanup did not complete within
 the 400 ms cleanup limit. The result reproduced three times. The same HTTP test cleaned up normally.
 The published long-running tool waits on timers and does not check cancellation.
+
+[Upstream issue #4846](https://github.com/modelcontextprotocol/servers/issues/4846)
 
 The server has no tools for forced disconnects or malformed responses, so those cases were not run.
 
