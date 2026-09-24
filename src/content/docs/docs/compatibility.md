@@ -19,6 +19,7 @@ Lab build.
 | Project                                                                                                |   Version | Tested paths              | Result                                    |
 | ------------------------------------------------------------------------------------------------------ | --------: | ------------------------- | ----------------------------------------- |
 | [`sparfenyuk/mcp-proxy`](https://github.com/sparfenyuk/mcp-proxy)                                      |    0.12.0 | stdio ↔ Streamable HTTP   | Two reproducible issues                   |
+| [`punkpeye/mcp-proxy`](https://github.com/punkpeye/mcp-proxy)                                          |    6.7.19 | stdio → Streamable HTTP   | Disconnect recovery failed                |
 | [Official Everything server](https://github.com/modelcontextprotocol/servers/tree/main/src/everything) | 2026.8.31 | stdio and Streamable HTTP | One stdio cancellation/cleanup limitation |
 | [`supercorp-ai/supergateway`](https://github.com/supercorp-ai/supergateway)                            |     4.0.0 | stdio ↔ Streamable HTTP   | No defect found                           |
 
@@ -43,6 +44,17 @@ Upstream tracking:
 - [Exited stdio child #247](https://github.com/sparfenyuk/mcp-proxy/issues/247)
 
 [Full `mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/mcp-proxy-0.12.0.md)
+
+### `punkpeye/mcp-proxy` 6.7.19
+
+Baseline, delay, timeout recovery, duplicate response, malformed response, and normal cleanup tests
+passed over stateful Streamable HTTP.
+
+After the stdio child disconnected, the active session failed with `Not connected`. A new HTTP
+session failed with the same error. The proxy remained running and retried its subscription stream,
+but did not restart the child.
+
+[Full `punkpeye/mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/punkpeye-mcp-proxy-6.7.19.md)
 
 ### Everything server 2026.8.31
 
