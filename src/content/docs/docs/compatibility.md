@@ -47,12 +47,11 @@ Upstream tracking:
 
 ### `punkpeye/mcp-proxy` 6.7.19
 
-Baseline, delay, timeout recovery, duplicate response, malformed response, and normal cleanup tests
-passed over stateful Streamable HTTP.
+Baseline, delay, timeout recovery, duplicate response, malformed response, and cleanup passed over
+stateful Streamable HTTP.
 
-After the stdio child disconnected, the active session failed with `Not connected`. A new HTTP
-session failed with the same error. The proxy remained running and retried its subscription stream,
-but did not restart the child.
+After the stdio child disconnected, current and new sessions failed with `Not connected`. The proxy
+stayed running but did not restart the child.
 
 [Full `punkpeye/mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/punkpeye-mcp-proxy-6.7.19.md)
 
