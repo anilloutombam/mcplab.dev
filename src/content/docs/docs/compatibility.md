@@ -19,6 +19,7 @@ Lab build.
 | Project                                                                                                |   Version | Tested paths              | Result                                    |
 | ------------------------------------------------------------------------------------------------------ | --------: | ------------------------- | ----------------------------------------- |
 | [`sparfenyuk/mcp-proxy`](https://github.com/sparfenyuk/mcp-proxy)                                      |    0.12.0 | stdio ↔ Streamable HTTP   | Two reproducible issues                   |
+| [`tbxark/mcp-proxy`](https://github.com/tbxark/mcp-proxy)                                              |     1.1.0 | stdio → Streamable HTTP   | No defect found                           |
 | [`punkpeye/mcp-proxy`](https://github.com/punkpeye/mcp-proxy)                                          |    6.7.19 | stdio → Streamable HTTP   | Disconnect recovery failed                |
 | [Official Everything server](https://github.com/modelcontextprotocol/servers/tree/main/src/everything) | 2026.8.31 | stdio and Streamable HTTP | One stdio cancellation/cleanup limitation |
 | [`supercorp-ai/supergateway`](https://github.com/supercorp-ai/supergateway)                            |     4.0.0 | stdio ↔ Streamable HTTP   | No defect found                           |
@@ -44,6 +45,19 @@ Upstream tracking:
 - [Exited stdio child #247](https://github.com/sparfenyuk/mcp-proxy/issues/247)
 
 [Full `mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/mcp-proxy-0.12.0.md)
+
+### `tbxark/mcp-proxy` 1.1.0
+
+Two Failure Lab stdio servers were mounted behind separate Streamable HTTP routes. Baseline, delay,
+timeout recovery, duplicate and malformed responses, and graceful shutdown passed.
+
+When the primary child exited, its request failed with `transport closed`. The control route stayed
+available. With automatic reconnect enabled and a 250 ms probe interval, the proxy rebuilt the
+primary child after three failed probes and new sessions passed.
+
+No `tbxark/mcp-proxy` defect was reproduced.
+
+[Full `tbxark/mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/tbxark-mcp-proxy-1.1.0.md)
 
 ### `punkpeye/mcp-proxy` 6.7.19
 
