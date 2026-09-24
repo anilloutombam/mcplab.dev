@@ -18,11 +18,25 @@ Lab build.
 
 | Project                                                                                                |   Version | Tested paths              | Result                                    |
 | ------------------------------------------------------------------------------------------------------ | --------: | ------------------------- | ----------------------------------------- |
+| [GitHub MCP Server](https://github.com/github/github-mcp-server)                                       |    1.12.2 | stdio and hosted HTTP     | No defect found                           |
 | [`sparfenyuk/mcp-proxy`](https://github.com/sparfenyuk/mcp-proxy)                                      |    0.12.0 | stdio ↔ Streamable HTTP   | Two reproducible issues                   |
 | [`tbxark/mcp-proxy`](https://github.com/tbxark/mcp-proxy)                                              |     1.1.0 | stdio → Streamable HTTP   | No defect found                           |
 | [`punkpeye/mcp-proxy`](https://github.com/punkpeye/mcp-proxy)                                          |    6.7.19 | stdio → Streamable HTTP   | Disconnect recovery failed                |
 | [Official Everything server](https://github.com/modelcontextprotocol/servers/tree/main/src/everything) | 2026.8.31 | stdio and Streamable HTTP | One stdio cancellation/cleanup limitation |
 | [`supercorp-ai/supergateway`](https://github.com/supercorp-ai/supergateway)                            |     4.0.0 | stdio ↔ Streamable HTTP   | No defect found                           |
+
+### GitHub MCP Server 1.12.2
+
+The hosted Streamable HTTP endpoint passed four authenticated `get_me` runs. Missing and invalid
+authorization values were rejected, and the `X-MCP-Tools` allowlist excluded an unlisted tool.
+
+The official 1.12.2 release binary passed three read-only `get_me` runs over stdio. Setup, calls,
+and cleanup completed normally. No GitHub MCP Server defect was reproduced.
+
+The server does not expose Failure Lab fault tools, so injected delay, malformed-response,
+duplicate-response, and forced-disconnect cases were not available.
+
+[Full GitHub MCP Server report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/github-mcp-server-1.12.2.md)
 
 ### `mcp-proxy` 0.12.0
 
