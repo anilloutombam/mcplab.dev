@@ -81,6 +81,8 @@ stateful Streamable HTTP.
 After the stdio child disconnected, current and new sessions failed with `Not connected`. The proxy
 stayed running but did not restart the child.
 
+[Upstream issue #112](https://github.com/punkpeye/mcp-proxy/issues/112)
+
 [Full `punkpeye/mcp-proxy` report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/punkpeye-mcp-proxy-6.7.19.md)
 
 ### Everything server 2026.8.31
