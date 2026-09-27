@@ -30,6 +30,14 @@ The default endpoint is `http://127.0.0.1:3000/mcp`. HTTP-specific host, port, a
 
 Inspector 2.4 can time out on sessionless Modern Streamable HTTP tool calls. Use Legacy mode for manual Inspector checks. The server's Modern `2026-07-28` path can be verified with a direct SDK client.
 
+## `session_loss` is not listed
+
+Connect over Streamable HTTP in Inspector's Legacy mode and initialize a session. The tool is not
+available over stdio, Modern HTTP, or legacy requests that do not establish a session.
+
+After `session_loss` runs, reconnect before making another call. A request that reuses the lost
+session ID receives `Session not found`.
+
 ## `disconnect` reports `fetch failed`
 
 That is the expected HTTP fault. `disconnect` terminates the active request before a tool result is returned. The HTTP listener stays running, so a later `ping` from a new request can succeed.

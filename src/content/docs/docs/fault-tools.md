@@ -1,6 +1,6 @@
 ---
 title: Fault Tools
-description: Reference for ping, delay, hang, disconnect, malformed_message, and duplicate_response.
+description: Reference for ping, delay, hang, disconnect, malformed_message, duplicate_response, response_after_cancellation, and session_loss.
 ---
 
 ## `ping`
@@ -130,3 +130,40 @@ npx @modelcontextprotocol/inspector npx mcp-failure-lab serve
 
 Connect, open **Tools**, select `duplicate_response`, and call it with `{}`. Note whether Inspector
 returns the first result, reports the duplicate, or closes the connection. Then run `ping`.
+
+## `session_loss`
+
+Invalidates the legacy Streamable HTTP session that called the tool. It accepts one activation
+mode:
+
+```json
+{ "activation": "during_request" }
+```
+
+| Activation       | Result                                                                   |
+| ---------------- | ------------------------------------------------------------------------ |
+| `during_request` | Ends the active call without returning a tool result.                    |
+| `after_response` | Returns the activation result, then rejects later calls on that session. |
+
+After either activation, another request using the lost session receives `Session not found`.
+Sessions opened by other clients remain usable. At most 128 legacy HTTP sessions are held at once;
+client session termination and server shutdown release their state.
+
+The tool is available only after a legacy `2025-11-25` Streamable HTTP initialization. Modern
+`2026-07-28` HTTP is per-request, and stdio has one shared connection rather than independent
+sessions. Stateless legacy requests also do not expose this tool.
+
+### Check in MCP Inspector
+
+Start the HTTP server:
+
+```sh
+npx mcp-failure-lab serve --transport http
+```
+
+Connect Inspector to `http://127.0.0.1:3000/mcp` in Legacy mode. Call `session_loss` with
+`after_response`, then call `ping` on the same connection. The activation call returns, while
+`ping` fails with `Session not found`. Reconnect Inspector to create a new session.
+
+Use `during_request` to test loss while a request is active. That call fails without a tool result;
+a separate legacy client session remains connected.
