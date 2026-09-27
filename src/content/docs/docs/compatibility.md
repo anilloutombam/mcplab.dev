@@ -113,6 +113,31 @@ No Supergateway defect was reproduced.
 
 [Full Supergateway report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/supergateway-4.0.0.md)
 
+## 0.11.0 lifecycle-fault results
+
+The published `mcp-failure-lab@0.11.0` package was tested three times with each official SDK.
+After cancelling `response_after_cancellation`, every client ignored the late response and passed
+the next `ping` call.
+
+| Client     | Version | Protocol     | Cancelled call | Recovery |
+| ---------- | ------: | ------------ | -------------- | -------- |
+| TypeScript |  1.30.1 | `2025-11-25` | Observed       | Pass     |
+| Python     |   2.2.0 | `2025-11-25` | Observed       | Pass     |
+| Go         |   1.7.0 | `2026-07-28` | Observed       | Pass     |
+| Rust       |   3.4.0 | `2025-11-25` | Observed       | Pass     |
+| C#         |   2.2.0 | `2026-07-28` | Observed       | Pass     |
+
+Legacy HTTP `session_loss` was tested with TypeScript and Python. `after_response` invalidated only
+the selected session in both clients. TypeScript also kept an unrelated session usable after
+`during_request`. Python cancelled its surrounding transport task context in that case, so other
+sessions in the same context and cleanup also failed.
+
+C# stdio cleanup took about 5.06 seconds in each run, matching its transport shutdown timeout.
+
+Read the
+[versioned 0.11.0 report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/v0.11.0.md)
+for timings, release identity, and test scope.
+
 ## 0.10.0 duplicate-response results
 
 The published `mcp-failure-lab@0.10.0` package was tested with `duplicate_response` followed by a
@@ -204,6 +229,8 @@ For the full matrix, release identity, interpretation, and exact reproducer, rea
 
 ## What the results mean
 
+- MCP Failure Lab 0.11.0 produced a late response for a cancelled request without corrupting the
+  next request in any of the five tested SDKs.
 - MCP Failure Lab 0.10.0 produced request-scoped duplicate responses while every tested client
   remained usable for a following call.
 - MCP Failure Lab 0.9.0 interoperated with both protocol eras tested.
