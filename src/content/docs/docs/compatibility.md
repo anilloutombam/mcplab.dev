@@ -130,9 +130,12 @@ the next `ping` call.
 Legacy HTTP `session_loss` was tested with TypeScript and Python. `after_response` invalidated only
 the selected session in both clients. TypeScript also kept an unrelated session usable after
 `during_request`. Python cancelled its surrounding transport task context in that case, so other
-sessions in the same context and cleanup also failed.
+sessions in the same context and cleanup also failed. This behavior is tracked in
+[python-sdk#3560](https://github.com/modelcontextprotocol/python-sdk/issues/3560).
 
 C# stdio cleanup took about 5.06 seconds in each run, matching its transport shutdown timeout.
+The missing graceful stdin close is tracked in
+[csharp-sdk#1836](https://github.com/modelcontextprotocol/csharp-sdk/issues/1836).
 
 Read the
 [versioned 0.11.0 report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/v0.11.0.md)
