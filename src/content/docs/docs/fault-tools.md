@@ -147,7 +147,8 @@ mode:
 
 After either activation, another request using the lost session receives `Session not found`.
 Sessions opened by other clients remain usable. At most 128 legacy HTTP sessions are held at once;
-client session termination and server shutdown release their state.
+sessions without an active request are reclaimed after five minutes of inactivity. Client session
+termination and server shutdown also release their state.
 
 The tool is available only after a legacy `2025-11-25` Streamable HTTP initialization. Modern
 `2026-07-28` HTTP is per-request, and stdio has one shared connection rather than independent
