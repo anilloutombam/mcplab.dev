@@ -21,7 +21,8 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		Define a tool call, timeout, and expectations in JSON.
 	</Card>
 	<Card title="Inject a fault" icon="warning">
-		Use delay, hang, disconnect, malformed_message, or duplicate_response to exercise recovery paths.
+		Use `delay`, `hang`, `disconnect`, `malformed_message`, `duplicate_response`, `response_after_cancellation`, or
+		`session_loss` to exercise recovery paths.
 	</Card>
 	<Card title="Verify state" icon="approve-check">
 		Add a sequential observer call such as `ping`.
@@ -40,15 +41,15 @@ MCP Failure Lab uses MCP TypeScript SDK v2 and targets protocol version
 `2026-07-28` for built-in scenario execution. The stdio and Streamable HTTP
 servers also accept `2025-11-25` clients for compatibility.
 
-The fault tools keep the same user-facing behavior across both protocol eras.
-Protocol features that depend on the older server-initiated request model are
-outside the current fault set.
+The shared fault tools keep the same user-facing behavior across both protocol eras.
+`session_loss` is limited to initialized legacy HTTP sessions, while
+`response_after_cancellation` is limited to stdio.
 
 See [External compatibility](/docs/compatibility/) for the versioned client matrix and known
 transport-specific behavior.
 
 :::note[Current scope]
 Failure Lab runs scenarios against its built-in server or a configured external HTTP or stdio MCP
-target. The built-in server provides malformed and duplicate JSON-RPC response faults. Session-loss
-faults are not implemented.
+target. The built-in server provides malformed and duplicate JSON-RPC response faults.
+Session-loss testing is available for initialized legacy HTTP sessions.
 :::

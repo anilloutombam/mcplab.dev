@@ -24,7 +24,10 @@ HTTP-specific options require `--transport http`. The host, port, and path are v
 
 ## Protocol behavior
 
-The endpoint serves MCP `2026-07-28` and provides stateless compatibility for `2025-11-25`. Both paths use the same server factory and expose `ping`, `delay`, `hang`, `disconnect`, `malformed_message`, and `duplicate_response`.
+The endpoint serves MCP `2026-07-28` and `2025-11-25`. Initialized legacy clients receive a
+server-issued session ID. Claimless legacy requests without initialization remain stateless for
+compatibility. Both paths use the same server factory and expose `ping`, `delay`, `hang`,
+`disconnect`, `malformed_message`, and `duplicate_response`.
 
 `malformed_message` changes only the activating request's response. Modern JSON responses and
 legacy SSE response events use the same fault rules. Unrelated SSE events remain unchanged. See
@@ -35,6 +38,10 @@ same request ID. This applies to modern and legacy HTTP requests. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for expected client behavior.
 
 Calling `disconnect` terminates its active HTTP request instead of returning a normal tool result. The listener remains available for later requests.
+
+Legacy sessions also expose `session_loss`. It can invalidate the current session during its active
+request or after returning its result. Modern HTTP and stateless legacy requests do not expose it.
+See [Fault Tools](/docs/fault-tools/#session_loss) for activation modes and expected outcomes.
 
 ## Local security boundary
 
