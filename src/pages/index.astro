@@ -22,6 +22,18 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 					href="https://github.com/anilloutombam/mcp-failure-lab">GitHub repository</a
 				>
 			</div>
+			<div class="project-stats" aria-label="MCP Failure Lab project statistics">
+				<a class="project-stat" href="https://www.npmjs.com/package/mcp-failure-lab">
+					<span class="project-stat-icon" aria-hidden="true">↓</span>
+					<strong data-weekly-downloads>362</strong>
+					<span>weekly downloads</span>
+				</a>
+				<a class="project-stat" href="https://github.com/anilloutombam/mcp-failure-lab/stargazers">
+					<span class="project-stat-icon" aria-hidden="true">★</span>
+					<strong data-github-stars>1</strong>
+					<span data-github-stars-label>GitHub star</span>
+				</a>
+			</div>
 			<div class="meta">
 				<span class="available">Usable early release</span><span>MIT licensed</span><span>Node.js 22.19+</span><span
 					>stdio + HTTP</span
@@ -143,4 +155,63 @@ Assertions: <span class="token-pass">passed</span></pre>
 			</div>
 		</section>
 	</main>
+	<script is:inline>
+		const statsCacheKey = 'mcp-failure-lab-project-stats';
+		const statsCacheLifetime = 60 * 60 * 1000;
+		const downloadsElement = document.querySelector('[data-weekly-downloads]');
+		const starsElement = document.querySelector('[data-github-stars]');
+		const starsLabelElement = document.querySelector('[data-github-stars-label]');
+		const numberFormatter = new Intl.NumberFormat();
+
+		const renderDownloads = (downloads) => {
+			if (downloadsElement && Number.isFinite(downloads)) {
+				downloadsElement.textContent = numberFormatter.format(downloads);
+			}
+		};
+
+		const renderStars = (stars) => {
+			if (starsElement && starsLabelElement && Number.isFinite(stars)) {
+				starsElement.textContent = numberFormatter.format(stars);
+				starsLabelElement.textContent = `GitHub ${stars === 1 ? 'star' : 'stars'}`;
+			}
+		};
+
+		let cachedStats;
+		try {
+			cachedStats = JSON.parse(localStorage.getItem(statsCacheKey) ?? 'null');
+		} catch {
+			localStorage.removeItem(statsCacheKey);
+		}
+
+		if (cachedStats) {
+			renderDownloads(cachedStats.downloads);
+			renderStars(cachedStats.stars);
+		}
+
+		if (!cachedStats || Date.now() - cachedStats.updatedAt > statsCacheLifetime) {
+			Promise.allSettled([
+				fetch('https://api.npmjs.org/downloads/point/last-week/mcp-failure-lab').then((response) => {
+					if (!response.ok) throw new Error('npm statistics request failed');
+					return response.json();
+				}),
+				fetch('https://api.github.com/repos/anilloutombam/mcp-failure-lab/stargazers/count', {
+					headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2026-03-10' },
+				}).then((response) => {
+					if (!response.ok) throw new Error('GitHub statistics request failed');
+					return response.json();
+				}),
+			]).then(([downloadsResult, starsResult]) => {
+				const downloads =
+					downloadsResult.status === 'fulfilled' ? downloadsResult.value.downloads : cachedStats?.downloads;
+				const stars = starsResult.status === 'fulfilled' ? starsResult.value.count : cachedStats?.stars;
+
+				renderDownloads(downloads);
+				renderStars(stars);
+
+				if (Number.isFinite(downloads) || Number.isFinite(stars)) {
+					localStorage.setItem(statsCacheKey, JSON.stringify({ downloads, stars, updatedAt: Date.now() }));
+				}
+			});
+		}
+	</script>
 </SiteLayout>
