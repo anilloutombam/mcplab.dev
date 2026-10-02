@@ -25,13 +25,13 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 			<div class="project-stats" aria-label="MCP Failure Lab project statistics">
 				<a class="project-stat" href="https://www.npmjs.com/package/mcp-failure-lab">
 					<span class="project-stat-icon" aria-hidden="true">↓</span>
-					<strong data-weekly-downloads>362</strong>
+					<strong data-weekly-downloads aria-label="Loading weekly downloads">—</strong>
 					<span>weekly downloads</span>
 				</a>
 				<a class="project-stat" href="https://github.com/anilloutombam/mcp-failure-lab/stargazers">
 					<span class="project-stat-icon" aria-hidden="true">★</span>
-					<strong data-github-stars>1</strong>
-					<span data-github-stars-label>GitHub star</span>
+					<strong data-github-stars aria-label="Loading GitHub stars">—</strong>
+					<span data-github-stars-label>GitHub stars</span>
 				</a>
 			</div>
 			<div class="meta">
@@ -166,12 +166,14 @@ Assertions: <span class="token-pass">passed</span></pre>
 		const renderDownloads = (downloads) => {
 			if (downloadsElement && Number.isFinite(downloads)) {
 				downloadsElement.textContent = numberFormatter.format(downloads);
+				downloadsElement.removeAttribute('aria-label');
 			}
 		};
 
 		const renderStars = (stars) => {
 			if (starsElement && starsLabelElement && Number.isFinite(stars)) {
 				starsElement.textContent = numberFormatter.format(stars);
+				starsElement.removeAttribute('aria-label');
 				starsLabelElement.textContent = `GitHub ${stars === 1 ? 'star' : 'stars'}`;
 			}
 		};
