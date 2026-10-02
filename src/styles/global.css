@@ -264,32 +264,23 @@ h1 {
 .project-stats {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 10px;
-	margin-top: 22px;
+	gap: 8px 20px;
+	margin-top: 24px;
 }
 .project-stat {
 	display: inline-flex;
 	align-items: baseline;
 	gap: 7px;
-	padding: 9px 12px;
-	border: 1px solid var(--line);
-	border-radius: 7px;
-	background: color-mix(in srgb, var(--surface) 72%, transparent);
 	color: var(--muted);
 	font:
-		11px/1.4 ui-monospace,
+		12px/1.5 ui-monospace,
 		SFMono-Regular,
 		Menlo,
 		monospace;
 	text-decoration: none;
-	transition:
-		border-color 0.15s ease,
-		background 0.15s ease,
-		color 0.15s ease;
+	transition: color 0.15s ease;
 }
 .project-stat:hover {
-	border-color: var(--line-strong);
-	background: var(--surface-2);
 	color: var(--text);
 }
 .project-stat-icon {
@@ -297,7 +288,6 @@ h1 {
 }
 .project-stat strong {
 	color: var(--text);
-	font-size: 14px;
 	font-weight: 650;
 }
 .meta {
