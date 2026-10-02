@@ -1,4 +1,6 @@
 @import '@fontsource-variable/figtree';
+@import '@fontsource/kalam/400.css';
+@import '@fontsource/kalam/700.css';
 
 :root {
 	color-scheme: dark;
@@ -225,11 +227,12 @@ button:focus-visible {
 	gap: 8px;
 	margin-bottom: 18px;
 	color: var(--muted);
-	font:
-		12px/1.4 ui-monospace,
-		SFMono-Regular,
-		Menlo,
-		monospace;
+	font-family: Kalam, cursive;
+	font-size: 17px;
+	font-weight: 400;
+	line-height: 1.35;
+	letter-spacing: 0.005em;
+	transform: rotate(-0.35deg);
 }
 .kicker:before {
 	content: '';
@@ -519,13 +522,12 @@ pre {
 }
 .eyebrow {
 	color: var(--accent-strong) !important;
-	font:
-		600 11px/1.4 ui-monospace,
-		SFMono-Regular,
-		Menlo,
-		monospace;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
+	font-family: Kalam, cursive;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.4;
+	letter-spacing: 0.01em;
+	transform: rotate(-0.4deg);
 }
 .sponsor-card .button {
 	align-self: flex-start;
