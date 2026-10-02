@@ -1,3 +1,5 @@
+@import '@fontsource-variable/figtree';
+
 :root {
 	--sl-color-accent-low: #1b2d12;
 	--sl-color-accent: #b8f36b;
@@ -10,7 +12,7 @@
 	--sl-color-gray-5: #292e37;
 	--sl-color-gray-6: #171a20;
 	--sl-color-black: #090a0c;
-	--sl-font: Inter, ui-sans-serif, system-ui, sans-serif;
+	--sl-font: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
 	--sl-font-mono: ui-monospace, SFMono-Regular, monospace;
 }
 :root[data-theme='light'] {
