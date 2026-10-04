@@ -15,6 +15,7 @@ graph LR
     Http <--> Server
     Server --> Registration[Tool Registration]
     Registration --> Ping[ping]
+    Registration --> Liveness[protocol_ping_liveness]
     Registration --> Delay[delay]
     Registration --> Hang[hang]
     Registration --> Disconnect[disconnect]
@@ -67,7 +68,7 @@ _Figure 2. Primary and optional observer calls execute sequentially._
 
 ## Responsibilities
 
-The server path separates six responsibilities:
+The server path separates these responsibilities:
 
 1. The CLI parses commands and starts `serve`.
 2. The selected transport exchanges MCP messages over stdio or Streamable HTTP.
@@ -75,6 +76,44 @@ The server path separates six responsibilities:
 4. `ping` supplies a deterministic health path.
 5. `delay`, `hang`, and `disconnect` reproduce controlled failures.
 6. Response, cancellation, and session fault modules own their activation and cleanup.
+7. `protocol_ping_liveness` owns one bounded server-to-client ping during its activating call.
+
+### Protocol liveness path
+
+The current working-tree implementation registers `protocol_ping_liveness` in `createServer`.
+It waits for `pingAfterMs`, then uses `context.mcpReq.send` to associate the protocol ping with
+the current request. The SDK bounds that request with `livenessTimeoutMs` and the activating
+call's abort signal. A successful ping is followed by `completionDelayMs`; failures skip that
+delay. This is a per-call operation, with no background heartbeat scheduler or persistent
+liveness registry.
+
+```mermaid
+flowchart TD
+    Call[protocol_ping_liveness call] --> Delay[Wait pingAfterMs]
+    Delay --> Ping[Send related protocol ping]
+    Ping --> Outcome{Ping outcome}
+    Outcome -- Success --> Work[Wait completionDelayMs]
+    Work --> Result[Return successful tool result]
+    Outcome -- Unsupported, invalid response, or timeout --> Policy{closeOnFailure?}
+    Policy -- No --> Error[Return tool error with ping diagnosis]
+    Policy -- Yes --> Close[Invoke transport closure]
+    Close --> Lost[Client may lose the tool result]
+```
+
+The `ping` health tool uses `tools/call`; this interaction uses the JSON-RPC method `ping`.
+Server-to-client protocol ping works on legacy `2025-11-25` connections. Modern `2026-07-28`
+rejects it locally as unsupported, including through the built-in scenario runner.
+
+Closure uses the server's injected request-scoped `disconnect` operation. Public HTTP serving
+interrupts the activating response stream. Stdio and a server without that injected operation
+retain the connection and report `closure_unavailable`, preserving unrelated calls. A recorder
+receives correlated ping and transport diagnostics; its default writes JSON events to stderr.
+It records `closure_requested` before closure and `closed` or `close_failed` afterward. When
+closure prevents result delivery, the client records transport failure while the server log
+preserves the ping diagnosis. See
+[reporting](/docs/reporting/#protocol-liveness-diagnostics) for those observability limits.
+
+### Response and session faults
 
 `malformed_message` activates a one-shot fault using the current request ID. The stdio transport
 decorator changes the matching outbound response. The HTTP wrapper changes a matching JSON
@@ -84,6 +123,12 @@ the connection. Neither path changes unrelated responses.
 `duplicate_response` uses the same request-scoped activation boundary. Stdio writes the matching
 response twice. HTTP converts a matching JSON response into two SSE events or duplicates the
 matching event in an existing SSE stream. Both payloads preserve the original request ID.
+
+`response_after_cancellation` is registered only by the stdio serving entry. Its controller
+tracks the activating request ID, observes cancellation, and sends one late response directly
+through the stdio transport. The transport decorator consumes the matching framework response
+to avoid an additional reply. A five-second deadline bounds activation, and cleanup removes
+timers and abort listeners. See [Fault Tools](/docs/fault-tools/#response_after_cancellation).
 
 `session_loss` is registered only for initialized legacy HTTP sessions. Each session owns its
 server, transport, and fault controllers. Losing a session removes it from the registry before the

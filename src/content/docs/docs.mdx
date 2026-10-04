@@ -41,9 +41,12 @@ MCP Failure Lab uses MCP TypeScript SDK v2 and targets protocol version
 `2026-07-28` for built-in scenario execution. The stdio and Streamable HTTP
 servers also accept `2025-11-25` clients for compatibility.
 
-The shared fault tools keep the same user-facing behavior across both protocol eras.
+The health, delay, hang, disconnect, and response fault tools support both protocol eras.
 `session_loss` is limited to initialized legacy HTTP sessions, while
-`response_after_cancellation` is limited to stdio.
+`response_after_cancellation` is limited to stdio. The current working-tree
+`protocol_ping_liveness` tool sends a server-to-client protocol ping on `2025-11-25`;
+it reports `unsupported` on `2026-07-28`. See [Fault Tools](/docs/fault-tools/) for availability
+and transport behavior.
 
 See [External compatibility](/docs/compatibility/) for the versioned client matrix and known
 transport-specific behavior.

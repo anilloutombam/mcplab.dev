@@ -30,6 +30,23 @@ The default endpoint is `http://127.0.0.1:3000/mcp`. HTTP-specific host, port, a
 
 Inspector 2.4 can time out on sessionless Modern Streamable HTTP tool calls. Use Legacy mode for manual Inspector checks. The server's Modern `2026-07-28` path can be verified with a direct SDK client.
 
+## Protocol liveness returns `unsupported`
+
+The `protocol_ping_liveness` tool requires legacy MCP `2025-11-25` for its server-to-client
+request. Modern `2026-07-28` excludes protocol ping, and the built-in runner uses that modern
+protocol. Use a legacy client to test the successful exchange. Until the feature is released,
+launch the local Failure Lab build rather than the published package.
+
+With `closeOnFailure: true`, the client may receive a connection error before the ping diagnosis
+can be delivered over HTTP; consult the correlated server stderr diagnostic or use `false` to
+inspect the returned diagnosis. Stdio reports `closure_unavailable` and retains the shared
+connection. See [Fault Tools](/docs/fault-tools/#protocol_ping_liveness).
+
+## `response_after_cancellation` is not listed
+
+Use the stdio `serve` entry. The tool is not registered for HTTP or the built-in HTTP runner.
+See [Fault Tools](/docs/fault-tools/#response_after_cancellation) for the cancellation workflow.
+
 ## `session_loss` is not listed
 
 Connect over Streamable HTTP in Inspector's Legacy mode and initialize a session. The tool is not

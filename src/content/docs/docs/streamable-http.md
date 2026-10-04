@@ -29,6 +29,12 @@ server-issued session ID. Claimless legacy requests without initialization remai
 compatibility. Both paths use the same server factory and expose `ping`, `delay`, `hang`,
 `disconnect`, `malformed_message`, and `duplicate_response`.
 
+The current working tree also registers `protocol_ping_liveness`. Server-to-client ping requires
+legacy `2025-11-25`; modern calls report `unsupported`. Its optional failure closure interrupts
+the activating HTTP response stream using the same request context as `disconnect`. This does
+not invoke the `session_loss` controller. See
+[protocol liveness](/docs/fault-tools/#protocol_ping_liveness) for timing and reporting limits.
+
 `malformed_message` changes only the activating request's response. Modern JSON responses and
 legacy SSE response events use the same fault rules. Unrelated SSE events remain unchanged. See
 [Fault Tools](/docs/fault-tools/#malformed_message) for variants and validation steps.
