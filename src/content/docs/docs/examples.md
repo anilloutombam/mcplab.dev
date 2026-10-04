@@ -9,6 +9,7 @@ The repository includes these scenario files:
 - `delay-result.json` — MCP result assertions
 - `hang-timeout.json` — expected timeout from the hanging tool
 - `delay-observe-ping.json` — post-condition verification through `ping`
+- `protocol-ping-liveness.json` — successful protocol ping during a legacy client's in-flight call; requires the local implementation and a `2025-11-25` client
 - `malformed-message.json` — invalid JSON-RPC response followed by a successful `ping`
 - `duplicate-response.json` — repeated JSON-RPC response followed by a successful `ping`
 - `github-get-me.json` — read-only authenticated-user call against GitHub MCP
@@ -36,6 +37,11 @@ The primary call and later `ping` should succeed. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for transport behavior and Inspector checks.
 
 ## Verify with MCP Inspector
+
+For the new protocol liveness tool, use the local build and legacy protocol instructions in
+[Fault Tools](/docs/fault-tools/#check-protocol-liveness-in-mcp-inspector). The built-in scenario
+runner can also run `examples/scenarios/protocol-ping-liveness.json`, which explicitly selects
+`protocolVersion: "2025-11-25"`.
 
 ```sh
 npx @modelcontextprotocol/inspector npx mcp-failure-lab serve

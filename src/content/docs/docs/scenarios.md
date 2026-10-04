@@ -20,6 +20,29 @@ A scenario describes one primary tool call, its deadline, and the expected obser
 
 `outcome` is `success`, `error`, or `timeout`. `textContains` is case-sensitive and searches only MCP content items whose type is `text`. If `timeoutMs` is omitted, the CLI applies a 30-second deadline.
 
+## Protocol liveness calls
+
+`protocol_ping_liveness` sends a protocol ping during its own primary tool call. Its arguments
+configure activation and a separate liveness deadline; the scenario's `timeoutMs` still bounds
+the whole client call. Allow enough time for `pingAfterMs`, `livenessTimeoutMs`, and any
+`completionDelayMs`, plus transport overhead.
+
+Set the optional top-level `protocolVersion` to `"2025-11-25"` or `"2026-07-28"` for built-in
+execution. Omitting it keeps the modern `2026-07-28` default. Legacy execution uses linked
+in-memory MCP transports; modern execution uses the in-process HTTP handler. Protocol selection
+applies to both the primary and observer calls. It is rejected with `--target`, where the external
+client negotiates its own protocol.
+
+The included `protocol-ping-liveness.json` selects `"2025-11-25"` and passes through the built-in
+runner:
+
+```sh
+npm run dev -- run examples/scenarios/protocol-ping-liveness.json
+```
+
+See [protocol liveness](/docs/fault-tools/#protocol_ping_liveness) for
+arguments, result fields, and local Inspector steps.
+
 ## Observer verification
 
 Use `observe` to make a separate call after the primary path. The calls are sequential and share the same MCP client connection.
