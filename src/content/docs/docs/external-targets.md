@@ -57,6 +57,9 @@ name of an environment variable.
 		"args": ["your-mcp-server"],
 		"env": {
 			"LOG_LEVEL": "error"
+		},
+		"envFrom": {
+			"API_KEY": "MCP_API_KEY"
 		}
 	}
 }
@@ -64,6 +67,32 @@ name of an environment variable.
 
 The optional `cwd` field selects the child process working directory. The adapter owns the process
 and connection created during setup and closes them during cleanup.
+
+`env` supplies literal values. Use `envFrom` for credentials: each key names a variable in the
+child process, and its value names a variable in the Failure Lab process environment. In this
+example, set `MCP_API_KEY` before running; the child receives it as `API_KEY`.
+
+Mappings are resolved when the transport is created. `envFrom` overrides `env` when both name
+the same child variable. Empty source values are passed through; missing sources stop setup
+before the child starts. Failure Lab reports the missing variable's name without its value and
+does not add resolved credentials to reports or logs. A target server can still return or log
+its own environment values, so use a trusted target. Unmapped parent variables are not added
+by Failure Lab; the SDK still inherits its standard system-variable allowlist.
+
+### GitHub stdio example
+
+The source checkout includes `examples/targets/github-stdio.json` for a locally installed
+`github-mcp-server` executable. It maps `GITHUB_PERSONAL_ACCESS_TOKEN` from the environment
+and restricts the server to the read-only `get_me` tool:
+
+```sh
+npm run dev -- run examples/scenarios/github-get-me.json \
+  --target examples/targets/github-stdio.json
+```
+
+Set the token before running. The same `envFrom` mapping works with other stdio MCP servers;
+use their required variable names and launch command. This configuration example is not a new
+GitHub interoperability test result.
 
 ## Provider-neutral MCP targets
 
