@@ -16,6 +16,8 @@ The repository includes these scenario files:
 - `gitlab-search-projects.json` — read-only project search against GitLab MCP
 
 See [External MCP targets](/docs/external-targets/) for the GitHub and GitLab target configurations.
+The GitHub stdio target uses `envFrom` to pass an existing token from the environment without
+storing it in JSON. See the [stdio example](/docs/external-targets/#github-stdio-example).
 
 ## Malformed response verification
 
