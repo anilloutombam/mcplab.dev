@@ -40,7 +40,8 @@ The primary call and later `ping` should succeed. See
 
 For the new protocol liveness tool, use the local build and legacy protocol instructions in
 [Fault Tools](/docs/fault-tools/#check-protocol-liveness-in-mcp-inspector). The built-in scenario
-runner negotiates the modern protocol and cannot exercise a successful server-to-client ping.
+runner can also run `examples/scenarios/protocol-ping-liveness.json`, which explicitly selects
+`protocolVersion: "2025-11-25"`.
 
 ```sh
 npx @modelcontextprotocol/inspector npx mcp-failure-lab serve

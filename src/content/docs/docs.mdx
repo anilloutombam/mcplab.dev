@@ -38,7 +38,8 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## Protocol compatibility
 
 MCP Failure Lab uses MCP TypeScript SDK v2 and targets protocol version
-`2026-07-28` for built-in scenario execution. The stdio and Streamable HTTP
+`2026-07-28` by default for built-in scenario execution. Scenarios can select `2025-11-25`
+with `protocolVersion`. The stdio and Streamable HTTP
 servers also accept `2025-11-25` clients for compatibility.
 
 The health, delay, hang, disconnect, and response fault tools support both protocol eras.

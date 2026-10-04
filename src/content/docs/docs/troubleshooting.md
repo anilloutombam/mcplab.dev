@@ -33,8 +33,8 @@ Inspector 2.4 can time out on sessionless Modern Streamable HTTP tool calls. Use
 ## Protocol liveness returns `unsupported`
 
 The `protocol_ping_liveness` tool requires legacy MCP `2025-11-25` for its server-to-client
-request. Modern `2026-07-28` excludes protocol ping, and the built-in runner uses that modern
-protocol. Use a legacy client to test the successful exchange. Until the feature is released,
+request. Modern `2026-07-28` excludes protocol ping. Set scenario `protocolVersion` to
+`"2025-11-25"` in the built-in runner, or use a legacy client. Until the feature is released,
 launch the local Failure Lab build rather than the published package.
 
 With `closeOnFailure: true`, the client may receive a connection error before the ping diagnosis

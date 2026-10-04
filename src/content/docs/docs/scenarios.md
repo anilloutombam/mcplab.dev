@@ -27,10 +27,20 @@ configure activation and a separate liveness deadline; the scenario's `timeoutMs
 the whole client call. Allow enough time for `pingAfterMs`, `livenessTimeoutMs`, and any
 `completionDelayMs`, plus transport overhead.
 
-The included `protocol-ping-liveness.json` describes the successful legacy-client path. The
-built-in runner uses MCP `2026-07-28`, which excludes protocol ping, so running that success
-example with the built-in client fails its expectations. Use a legacy `2025-11-25` client for
-the successful exchange. See [protocol liveness](/docs/fault-tools/#protocol_ping_liveness) for
+Set the optional top-level `protocolVersion` to `"2025-11-25"` or `"2026-07-28"` for built-in
+execution. Omitting it keeps the modern `2026-07-28` default. Legacy execution uses linked
+in-memory MCP transports; modern execution uses the in-process HTTP handler. Protocol selection
+applies to both the primary and observer calls. It is rejected with `--target`, where the external
+client negotiates its own protocol.
+
+The included `protocol-ping-liveness.json` selects `"2025-11-25"` and passes through the built-in
+runner:
+
+```sh
+npm run dev -- run examples/scenarios/protocol-ping-liveness.json
+```
+
+See [protocol liveness](/docs/fault-tools/#protocol_ping_liveness) for
 arguments, result fields, and local Inspector steps.
 
 ## Observer verification

@@ -65,9 +65,10 @@ the request ID, ping outcome, and transport outcome. A `closure_requested` diagn
 before HTTP closure; `closed` or `close_failed` records the closure operation's outcome.
 
 Protocol ping is supported by MCP `2025-11-25`. MCP `2026-07-28` removed the server-to-client
-request channel; this tool reports `unsupported` on that protocol. The built-in `run` command
-uses `2026-07-28`, so the included `protocol-ping-liveness.json` success example requires a
-legacy client rather than the built-in runner.
+request channel; this tool reports `unsupported` on that protocol. The included
+`protocol-ping-liveness.json` sets `protocolVersion: "2025-11-25"` and can run with
+`npm run dev -- run examples/scenarios/protocol-ping-liveness.json`. Scenarios without protocol
+selection retain the modern default.
 
 ### Check protocol liveness in MCP Inspector
 
@@ -213,7 +214,7 @@ returns the first result, reports the duplicate, or closes the connection. Then 
 
 Accepts `{}` and sends one late result for the activating request after the server observes its
 cancellation. This tool is available through `serve` over stdio. It is unavailable over HTTP
-and through the built-in `run` command, which uses HTTP.
+and through the built-in `run` command, which does not register this stdio-specific controller.
 
 Use an SDK client with an `AbortController` and an `onprogress` callback. Start the call, then
 abort when its progress notification arrives. The client call rejects; the server sends a late
