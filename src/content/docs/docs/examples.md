@@ -12,6 +12,9 @@ The repository includes these scenario files:
 - `protocol-ping-liveness.json` — successful protocol ping during a legacy client's in-flight call; requires the local implementation and a `2025-11-25` client
 - `malformed-message.json` — invalid JSON-RPC response followed by a successful `ping`
 - `duplicate-response.json` — repeated JSON-RPC response followed by a successful `ping`
+- `invalid-progress-regressing.json` — progress values `2`, then `1`, followed by `ping`; requires the local implementation
+- `invalid-progress-unknown-token.json` — notification with an unmatched token, followed by `ping`; requires the local implementation
+- `invalid-progress-after-completion.json` — late notification after the response, followed by `ping`; requires the local implementation
 - `github-get-me.json` — read-only authenticated-user call against GitHub MCP
 - `gitlab-search-projects.json` — read-only project search against GitLab MCP
 
@@ -37,6 +40,18 @@ npm run dev -- run examples/scenarios/duplicate-response.json
 
 The primary call and later `ping` should succeed. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for transport behavior and Inspector checks.
+
+## Invalid progress verification
+
+From a local Failure Lab checkout, run any of the `invalid-progress-*.json` scenarios, for
+example:
+
+```sh
+npm run dev -- run examples/scenarios/invalid-progress-regressing.json
+```
+
+The runner checks callback values and then calls `ping`. See
+[Fault Tools](/docs/fault-tools/#invalid_progress) for all variants and wire-level limitations.
 
 ## Verify with MCP Inspector
 

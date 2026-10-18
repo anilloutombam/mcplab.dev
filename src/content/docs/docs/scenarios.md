@@ -43,6 +43,26 @@ npm run dev -- run examples/scenarios/protocol-ping-liveness.json
 See [protocol liveness](/docs/fault-tools/#protocol_ping_liveness) for
 arguments, result fields, and local Inspector steps.
 
+## Progress notification assertions
+
+The built-in runner records progress numbers delivered to the client's callback for each call.
+Use `expect.progressValues` to check their order. For example, `invalid_progress` with
+`regressing-progress` sends two notifications before its response:
+
+```json
+{
+	"name": "regressing progress",
+	"call": { "tool": "invalid_progress", "args": { "variant": "regressing-progress" } },
+	"expect": { "outcome": "success", "progressValues": [2, 1] }
+}
+```
+
+An empty array means the callback received no values; it does not prove that no notification was
+sent. The unknown-token and after-completion examples use `[]` because the built-in client
+ignores those notifications. Use a transport trace to check the wire-level fault. The assertion
+accepts up to 16 nonnegative, finite values and is unavailable with `--target`: external adapters
+do not report progress callbacks. See [invalid_progress](/docs/fault-tools/#invalid_progress).
+
 ## Observer verification
 
 Use `observe` to make a separate call after the primary path. The calls are sequential and share the same MCP client connection.

@@ -21,8 +21,8 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		Define a tool call, timeout, and expectations in JSON.
 	</Card>
 	<Card title="Inject a fault" icon="warning">
-		Use `delay`, `hang`, `disconnect`, `malformed_message`, `duplicate_response`, `response_after_cancellation`, or
-		`session_loss` to exercise recovery paths.
+		Use `delay`, `hang`, `disconnect`, `malformed_message`, `duplicate_response`, `invalid_progress`,
+		`response_after_cancellation`, or `session_loss` to exercise recovery paths.
 	</Card>
 	<Card title="Verify state" icon="approve-check">
 		Add a sequential observer call such as `ping`.
@@ -43,6 +43,7 @@ with `protocolVersion`. The stdio and Streamable HTTP
 servers also accept `2025-11-25` clients for compatibility.
 
 The health, delay, hang, disconnect, and response fault tools support both protocol eras.
+The current working-tree `invalid_progress` tool sends request-scoped protocol notifications.
 `session_loss` is limited to initialized legacy HTTP sessions, while
 `response_after_cancellation` is limited to stdio. The current working-tree
 `protocol_ping_liveness` tool sends a server-to-client protocol ping on `2025-11-25`;
@@ -54,6 +55,7 @@ transport-specific behavior.
 
 :::note[Current scope]
 Failure Lab runs scenarios against its built-in server or a configured external HTTP or stdio MCP
-target. The built-in server provides malformed and duplicate JSON-RPC response faults.
+target. The built-in server provides malformed and duplicate JSON-RPC response faults, plus
+working-tree invalid progress notifications.
 Session-loss testing is available for initialized legacy HTTP sessions.
 :::

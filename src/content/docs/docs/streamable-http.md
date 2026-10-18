@@ -43,6 +43,11 @@ legacy SSE response events use the same fault rules. Unrelated SSE events remain
 same request ID. This applies to modern and legacy HTTP requests. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for expected client behavior.
 
+The current working-tree `invalid_progress` tool sends at most two request-scoped progress
+notifications. For `after-completion`, the notification follows the matching response event in
+the HTTP response stream, including for initialized legacy sessions. See
+[Fault Tools](/docs/fault-tools/#invalid_progress) for variants and cleanup limits.
+
 Calling `disconnect` terminates its active HTTP request instead of returning a normal tool result. The listener remains available for later requests.
 
 Legacy sessions also expose `session_loss`. It can invalidate the current session during its active
