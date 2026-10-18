@@ -210,6 +210,43 @@ npx @modelcontextprotocol/inspector npx mcp-failure-lab serve
 Connect, open **Tools**, select `duplicate_response`, and call it with `{}`. Note whether Inspector
 returns the first result, reports the duplicate, or closes the connection. Then run `ping`.
 
+## `invalid_progress`
+
+Sends a deliberately invalid MCP progress notification for one tool call. This tool is in the
+Failure Lab working tree; use a local checkout until a release containing it is published. It
+works over stdio and Streamable HTTP, including initialized legacy HTTP sessions.
+
+The client must send a progress token with the call. Without one, the tool returns an error and
+sends no fault notification. Choose one `variant`:
+
+| Variant               | Notifications sent | Rule being tested                                      |
+| --------------------- | ------------------ | ------------------------------------------------------ |
+| `unknown-token`       | One                | Uses a token different from the requesting call's.     |
+| `regressing-progress` | Two                | Sends progress `2`, then `1`, with the correct token.  |
+| `after-completion`    | One                | Sends progress after the matching response is written. |
+
+These are protocol notifications, not content in the tool result. The tool itself returns a
+normal text result after activation. For `after-completion`, stdio sends a later frame; HTTP
+places the notification after the response event in the same response stream. A client may ignore
+an unknown token or a notification for a completed call, so its progress callback can remain
+empty even when the notification was sent.
+
+Each activation is tied to its request ID, sends at most two notifications, and has no timer or
+background loop. At most 128 late notifications can be pending. Pending late notifications are
+removed on cancellation, after the matching response, or when the transport/session closes.
+
+From a local Failure Lab checkout, run the included scenarios:
+
+```sh
+npm run dev -- run examples/scenarios/invalid-progress-regressing.json
+npm run dev -- run examples/scenarios/invalid-progress-unknown-token.json
+npm run dev -- run examples/scenarios/invalid-progress-after-completion.json
+```
+
+Each scenario follows the fault with `ping`. See [Scenarios](/docs/scenarios/) for how the
+built-in runner checks progress callbacks; use a transport trace to verify notifications that a
+client ignores.
+
 ## `response_after_cancellation`
 
 Accepts `{}` and sends one late result for the activating request after the server observes its
