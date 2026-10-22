@@ -20,7 +20,7 @@ The source repository remains authoritative when this site and the product diver
 
 ## Requirements
 
-- Node.js 22.19.0 or newer
+- Node.js 22.23.4 (Node 22)
 - npm
 
 ## Development
