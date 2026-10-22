@@ -5,7 +5,7 @@ description: Diagnose common setup, transport, timeout, and assertion issues.
 
 ## The command does not start
 
-Confirm Node.js 22.19.0 or newer is active, then check the published CLI:
+Confirm Node.js 22.23.4 or newer is active, then check the published CLI:
 
 ```sh
 node --version

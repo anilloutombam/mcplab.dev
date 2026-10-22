@@ -3,7 +3,7 @@ title: Getting Started
 description: Run the MCP Failure Lab demo and your first scenario.
 ---
 
-MCP Failure Lab requires Node.js 22.19.0 or newer and npm. The fastest path needs no clone or global install:
+MCP Failure Lab requires Node.js 22.23.4 or newer and npm. The fastest path needs no clone or global install:
 
 ```sh
 npx mcp-failure-lab demo
