@@ -41,6 +41,10 @@ npm run preview
 
 The static production output is written to `dist/`.
 
+The homepage loads npm downloads for the rolling last 30 available days and GitHub stars in the
+browser. Project statistics are cached locally for one hour; the cache key is versioned when the
+metric definition changes so an older window is never shown under a new label.
+
 ## Project structure
 
 ```text

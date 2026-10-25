@@ -295,6 +295,23 @@ h1 {
 	color: var(--text);
 	font-weight: 650;
 }
+.github-star-stat {
+	align-items: center;
+	gap: 6px;
+}
+.github-mark {
+	width: 14px;
+	height: 14px;
+	color: var(--text);
+}
+.github-star-stat strong {
+	min-width: 24px;
+	padding: 1px 6px;
+	border: 1px solid var(--line-strong);
+	border-radius: 999px;
+	background: var(--surface-2);
+	text-align: center;
+}
 .meta {
 	display: flex;
 	flex-wrap: wrap;
@@ -319,6 +336,55 @@ h1 {
 .meta .available:before {
 	background: var(--accent);
 }
+.registry-links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin-top: 18px;
+	color: var(--muted);
+	font:
+		11px/1.4 ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		monospace;
+}
+.registry-prefix {
+	margin-right: 2px;
+}
+.registry-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 5px 8px;
+	border: 1px solid var(--line);
+	border-radius: 5px;
+	background: var(--surface);
+	color: var(--muted);
+	text-decoration: none;
+	transition:
+		border-color 0.15s ease,
+		color 0.15s ease,
+		background 0.15s ease;
+}
+.registry-link:hover {
+	border-color: var(--line-strong);
+	background: var(--surface-2);
+	color: var(--text);
+}
+.mcp-registry-mark {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background: var(--text);
+	-webkit-mask: url('/brand/mcp-official-mark.svg') center / contain no-repeat;
+	mask: url('/brand/mcp-official-mark.svg') center / contain no-repeat;
+}
+.registry-github-mark {
+	width: 15px;
+	height: 15px;
+	color: var(--text);
+}
 .section {
 	padding: 76px 0;
 	border-top: 1px solid var(--line);
@@ -336,6 +402,37 @@ h1 {
 	color: var(--muted);
 	font-size: 16px;
 	text-wrap: pretty;
+}
+.section-heading-row {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 32px;
+}
+.section-kicker {
+	margin-bottom: 8px;
+	color: var(--accent-strong);
+	font:
+		600 11px/1.4 ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		monospace;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+.text-link {
+	flex: 0 0 auto;
+	margin-bottom: 12px;
+	color: var(--muted);
+	font:
+		600 12px/1.4 ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		monospace;
+	text-decoration: none;
+}
+.text-link:hover {
+	color: var(--accent-strong);
 }
 .example-grid {
 	display: grid;
@@ -456,6 +553,67 @@ pre {
 }
 .tag.planned:before {
 	background: var(--line-strong);
+}
+.capability-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	border-top: 1px solid var(--line);
+	border-left: 1px solid var(--line);
+	border-radius: 9px;
+	overflow: hidden;
+	background: var(--line);
+	box-shadow: var(--shadow);
+}
+.capability-card {
+	position: relative;
+	min-height: 260px;
+	padding: 28px;
+	border-right: 1px solid var(--line);
+	border-bottom: 1px solid var(--line);
+	background: var(--surface);
+}
+.capability-card:hover {
+	background: color-mix(in srgb, var(--surface-2) 62%, var(--surface));
+}
+.capability-number {
+	margin-bottom: 42px;
+	color: var(--accent-strong);
+	font:
+		600 11px/1 ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		monospace;
+}
+.capability-card h3 {
+	margin: 0 0 10px;
+	font-size: 20px;
+	line-height: 1.25;
+	letter-spacing: -0.025em;
+}
+.capability-card p {
+	max-width: 440px;
+	margin: 0 0 24px;
+	color: var(--muted);
+	font-size: 14px;
+}
+.capability-tools {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+}
+.capability-tools code {
+	max-width: 100%;
+	padding: 5px 8px;
+	border: 1px solid var(--line);
+	border-radius: 4px;
+	background: var(--surface-2);
+	color: var(--text);
+	font:
+		11px/1.35 ui-monospace,
+		SFMono-Regular,
+		Menlo,
+		monospace;
+	overflow-wrap: anywhere;
 }
 .split {
 	display: grid;
@@ -744,8 +902,17 @@ pre {
 	}
 	.example-grid,
 	.split,
+	.capability-grid,
 	.support-grid {
 		grid-template-columns: 1fr;
+	}
+	.section-heading-row {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 0;
+	}
+	.text-link {
+		margin: -18px 0 30px;
 	}
 	.code-panel + .code-panel {
 		border-left: 0;

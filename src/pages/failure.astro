@@ -12,8 +12,8 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 			<div class="kicker">MCP Lab / MCP Failure Lab</div>
 			<h1>Deterministic failure scenarios for MCP servers.</h1>
 			<p class="lede">
-				Reproduce delay, hanging requests, cancellation, transport loss, and malformed or duplicate JSON-RPC responses
-				through a real MCP client/server execution path.
+				Reproduce timing, transport, response, session, payload-size, liveness, and progress faults through a real MCP
+				client/server execution path.
 			</p>
 			<div class="actions">
 				<a class="button primary" href="/docs/getting-started">Install and run</a><a
@@ -22,7 +22,9 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 				>
 			</div>
 			<div class="meta">
-				<span class="available">Available on npm</span><span>TypeScript</span><span>MIT</span><span>Early release</span>
+				<span class="available">Available on npm</span><span>TypeScript</span><span>MIT</span><span
+					>Node.js 22.23.4+</span
+				>
 			</div>
 		</section>
 
@@ -105,8 +107,9 @@ Assertions: <span class="token-pass">passed</span></pre>
 		<section class="section">
 			<div class="notice">
 				<strong>Current boundary.</strong> External HTTP and stdio MCP targets are supported. The built-in server provides
-				malformed and duplicate JSON-RPC response faults. Late-response testing is available over stdio, and session-loss
-				testing is available for initialized legacy HTTP sessions.
+				malformed, duplicate, oversized, and invalid-progress response faults. Protocol-ping liveness checks target legacy
+				clients. Late-response testing is available over stdio, and session-loss testing is available for initialized legacy
+				HTTP sessions.
 			</div><div class="actions">
 				<a class="button primary" href="/docs/getting-started">Read the documentation</a><a
 					class="button"
