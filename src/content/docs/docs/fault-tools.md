@@ -13,8 +13,7 @@ Sends one server-to-client MCP protocol `ping` while its own tool call is in fli
 `ping` tool checks server health through a client-to-server `tools/call`; protocol ping instead
 checks whether the client answers a JSON-RPC request whose method is `ping`.
 
-This feature is currently available in the Failure Lab working tree. Use a local checkout until
-a release containing the tool is published.
+This feature is available in the published Failure Lab package.
 
 | Argument            | Required | Range or default                  | Behavior                                            |
 | ------------------- | -------- | --------------------------------- | --------------------------------------------------- |
@@ -212,9 +211,9 @@ returns the first result, reports the duplicate, or closes the connection. Then 
 
 ## `invalid_progress`
 
-Sends a deliberately invalid MCP progress notification for one tool call. This tool is in the
-Failure Lab working tree; use a local checkout until a release containing it is published. It
-works over stdio and Streamable HTTP, including initialized legacy HTTP sessions.
+Sends a deliberately invalid MCP progress notification for one tool call. This tool is available
+in the published Failure Lab package and works over stdio and Streamable HTTP, including
+initialized legacy HTTP sessions.
 
 The client must send a progress token with the call. Without one, the tool returns an error and
 sends no fault notification. Choose one `variant`:

@@ -26,10 +26,11 @@ HTTP-specific options require `--transport http`. The host, port, and path are v
 
 The endpoint serves MCP `2026-07-28` and `2025-11-25`. Initialized legacy clients receive a
 server-issued session ID. Claimless legacy requests without initialization remain stateless for
-compatibility. Both paths use the same server factory and expose `ping`, `delay`, `hang`,
-`disconnect`, `malformed_message`, and `duplicate_response`.
+compatibility. Both paths use the same server factory and expose the core health, timing,
+transport, response, payload-size, liveness, and progress tools described in
+[Fault Tools](/docs/fault-tools/).
 
-The current working tree also registers `protocol_ping_liveness`. Server-to-client ping requires
+`protocol_ping_liveness` requires
 legacy `2025-11-25`; modern calls report `unsupported`. Its optional failure closure interrupts
 the activating HTTP response stream using the same request context as `disconnect`. This does
 not invoke the `session_loss` controller. See
@@ -43,7 +44,7 @@ legacy SSE response events use the same fault rules. Unrelated SSE events remain
 same request ID. This applies to modern and legacy HTTP requests. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for expected client behavior.
 
-The current working-tree `invalid_progress` tool sends at most two request-scoped progress
+The `invalid_progress` tool sends at most two request-scoped progress
 notifications. For `after-completion`, the notification follows the matching response event in
 the HTTP response stream, including for initialized legacy sessions. See
 [Fault Tools](/docs/fault-tools/#invalid_progress) for variants and cleanup limits.

@@ -80,7 +80,7 @@ The server path separates these responsibilities:
 
 ### Protocol liveness path
 
-The current working-tree implementation registers `protocol_ping_liveness` in `createServer`.
+The server registers `protocol_ping_liveness` in `createServer`.
 It waits for `pingAfterMs`, then uses `context.mcpReq.send` to associate the protocol ping with
 the current request. The SDK bounds that request with `livenessTimeoutMs` and the activating
 call's abort signal. A successful ping is followed by `completionDelayMs`; failures skip that
