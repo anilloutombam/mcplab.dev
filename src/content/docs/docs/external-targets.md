@@ -21,6 +21,8 @@ npm run dev -- run path/to/scenario.json --target path/to/target.json
 Keeping the files separate allows one scenario to run against multiple MCP implementations without
 embedding credentials or connection details in the scenario.
 
+Target configuration files are limited to 1 MiB (1,048,576 bytes).
+
 ## Streamable HTTP
 
 ```json

@@ -4,6 +4,7 @@ description: Define deterministic fault calls and expectations in JSON.
 ---
 
 A scenario describes one primary tool call, its deadline, and the expected observation.
+Scenario JSON files are limited to 1 MiB (1,048,576 bytes).
 
 ```json
 {
