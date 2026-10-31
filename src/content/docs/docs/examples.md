@@ -1,6 +1,6 @@
 ---
 title: Examples
-description: Included scenarios, observer verification, Inspector, and Future AGI validation.
+description: Included scenarios, client recovery in CI, Inspector, and external validation.
 ---
 
 The repository includes these scenario files:
@@ -82,6 +82,45 @@ npm run dev -- run examples/scenarios/delay-observe-ping.json
 ```
 
 This proves the server is responsive after the primary delay through a separate tool path on the same connection.
+
+## Test an MCP client in CI
+
+The repository includes a runnable timeout-recovery example using the official TypeScript MCP
+client. It launches Failure Lab over stdio, calls `delay` with a client deadline shorter than the
+requested delay, and then calls `ping` on the same connection.
+
+From a Failure Lab checkout, run:
+
+```sh
+npm run build
+npm run example:client-recovery
+```
+
+Expected output:
+
+```text
+timeout: observed
+follow-up ping: passed
+connection recovery: passed
+```
+
+The useful contract is not the exact elapsed time. The client must report the deadline and remain
+usable for the follow-up request. To test another MCP client, keep that sequence and replace the
+reference client construction and calls with your implementation.
+
+When copying the test into another repository, pin the Failure Lab version in the stdio launch
+configuration:
+
+```json
+{
+	"command": "npx",
+	"args": ["-y", "mcp-failure-lab@0.13.2", "serve"]
+}
+```
+
+See the complete
+[`client-timeout-recovery` example](https://github.com/anilloutombam/mcp-failure-lab/tree/main/examples/ci/client-timeout-recovery)
+for the script, cleanup behavior, and adaptation notes.
 
 ## Future AGI experiment
 
