@@ -113,6 +113,66 @@ No Supergateway defect was reproduced.
 
 [Full Supergateway report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/supergateway-4.0.0.md)
 
+## 0.13.2 focused SDK compatibility study
+
+The published `mcp-failure-lab@0.13.2` package was tested against current TypeScript, Python, and
+Go MCP SDK releases over stdio and Streamable HTTP. Ten cases ran three times per transport and
+SDK, producing 180 executions. Every primary call was followed by `ping` on the same session.
+
+| Client                                      | Version | Protocol     | Executions | Malformed responses | Same-session recovery |
+| ------------------------------------------- | ------: | ------------ | ---------: | ------------------: | --------------------: |
+| TypeScript `@modelcontextprotocol/client`   |   2.4.0 | `2025-11-25` |         60 |      Rejected 18/18 |                 18/18 |
+| Python `mcp`                                |   2.3.0 | `2025-11-25` |         60 |      Rejected 18/18 |                 18/18 |
+| Go `github.com/modelcontextprotocol/go-sdk` |   1.8.0 | `2026-07-28` |         60 |      Rejected 18/18 |                  6/18 |
+
+The malformed cases covered responses missing `jsonrpc`, declaring `jsonrpc: "1.0"`, or
+containing both `result` and `error`. TypeScript and Python rejected every malformed response and
+completed the next call. Go rejected every malformed response, but the session could not complete
+the follow-up call after the missing and invalid-version variants. This reproduced 12 times across
+both transports. Go rejected the result-with-error variant and recovered in all six runs.
+
+The newer fault tools were also exercised:
+
+- All 18 responses carrying a 64 KiB tool payload succeeded, followed by a successful `ping`.
+- All 54 invalid-progress calls completed, followed by a successful `ping`.
+- TypeScript and Python ignored progress for an unknown token, delivered the regressing values
+  `2, 1`, and did not deliver progress sent after completion to the completed request callback.
+- The Go harness verified call and recovery behavior but did not record progress callback values.
+
+Baseline, bounded delay, and duplicate-response recovery also passed in every run. The 64 KiB
+result demonstrates acceptance at that size with default client limits; it does not establish a
+maximum response size. Invalid-progress results describe observed callback behavior, not a
+requirement that clients reject the tool call.
+
+This was a focused three-SDK study. Rust, C#, Java, and Ruby were not tested, and the matrix did
+not rerun every fault covered by the broader 0.12.0 study.
+
+[Full 0.13.2 compatibility report](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/v0.13.2.md)
+
+### Go stdio invalid-response teardown diagnostic
+
+A separate diagnostic checked what happened after the Go client received a response with a
+missing or invalid `jsonrpc` field over stdio. It tested Go SDK 1.8.0 and SDK `main` at
+`f91620f5289e`.
+
+For each SDK revision, both variants ran three times while a 750 ms `delay` call was already in
+flight. In all 12 executions:
+
+- the malformed response was rejected;
+- the owned stdio child process exited and was reaped;
+- the in-flight request failed after approximately 102–103 ms instead of hanging;
+- a later `ping` failed immediately.
+
+This is connection-wide behavior, but it is not classified as a protocol violation. MCP requires
+valid JSON-RPC messages and does not define the recovery policy for an invalid response. No
+upstream bug was filed.
+
+The minimal current-main comparison also found that Streamable HTTP recovered after the same
+missing and invalid-version responses in all six runs. The remaining current-main observation is
+specific to stdio.
+
+[Full Go stdio diagnostic](https://github.com/anilloutombam/mcp-failure-lab/blob/main/docs/compatibility/go-sdk-stdio-invalid-jsonrpc-teardown.md)
+
 ## 0.11.0 lifecycle-fault results
 
 The published `mcp-failure-lab@0.11.0` package was tested three times with each official SDK.
