@@ -79,6 +79,7 @@ body {
 }
 .main-pane {
 	--sl-content-width: 48rem;
+	min-width: 0;
 }
 .hero h1 {
 	letter-spacing: -0.05em;
@@ -99,8 +100,9 @@ body {
 	text-decoration-thickness: 1px;
 }
 .sl-markdown-content table {
-	display: table;
 	width: 100%;
+	max-width: 100%;
+	-webkit-overflow-scrolling: touch;
 }
 .sl-markdown-content th {
 	background: var(--sl-color-gray-6);
