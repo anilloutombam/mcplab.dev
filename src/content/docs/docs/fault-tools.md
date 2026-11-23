@@ -221,6 +221,23 @@ field; an SSE response also lacks its final event delimiter. The HTTP listener r
 for another request. The fault affects only the activating request, with at most 128 pending
 activations and a 256-byte limit on the emitted prefix.
 
+To inspect the HTTP response from the published package, start the server:
+
+```sh
+npx mcp-failure-lab serve --transport http
+```
+
+In another terminal, call the tool:
+
+```sh
+curl -i -N http://127.0.0.1:3000/mcp \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":7,"method":"tools/call","params":{"name":"truncated_response","arguments":{}}}'
+```
+
+The response stops after `"result":` instead of returning a complete tool result.
+
 From a repository checkout, run the [client example](https://github.com/anilloutombam/mcp-failure-lab/blob/main/examples/ci/truncated-response/run.mjs):
 
 ```sh
