@@ -41,6 +41,12 @@ npm run dev -- run examples/scenarios/duplicate-response.json
 The primary call and later `ping` should succeed. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for transport behavior and Inspector checks.
 
+## Truncated response verification
+
+Use the [client example](https://github.com/anilloutombam/mcp-failure-lab/blob/main/examples/ci/truncated-response/run.mjs)
+from a Failure Lab checkout. It checks the client error and a subsequent `ping` over stdio or HTTP.
+See [Fault Tools](/docs/fault-tools/#truncated_response) for commands and transport behavior.
+
 ## Invalid progress verification
 
 From a local Failure Lab checkout, run any of the `invalid-progress-*.json` scenarios, for

@@ -21,6 +21,7 @@ graph LR
     Registration --> Disconnect[disconnect]
     Registration --> Malformed[malformed_message]
     Registration --> Duplicate[duplicate_response]
+    Registration --> Truncated[truncated_response]
     Stdio --> LateResponse[response_after_cancellation]
     Http --> LegacySessions[Legacy session manager]
     LegacySessions --> SessionLoss[session_loss]
@@ -124,6 +125,11 @@ the connection. Neither path changes unrelated responses.
 `duplicate_response` uses the same request-scoped activation boundary. Stdio writes the matching
 response twice. HTTP converts a matching JSON response into two SSE events or duplicates the
 matching event in an existing SSE stream. Both payloads preserve the original request ID.
+
+`truncated_response` cuts the matching response after the `"result":` key. Stdio writes the
+prefix and closes its connection. HTTP cuts the JSON body or SSE event for that request while
+keeping the listener available. The in-memory scenario handler cannot emit partial wire bytes;
+use a stdio or HTTP client to exercise this fault.
 
 `response_after_cancellation` is registered only by the stdio serving entry. Its controller
 tracks the activating request ID, observes cancellation, and sends one late response directly

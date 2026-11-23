@@ -209,6 +209,34 @@ npx @modelcontextprotocol/inspector npx mcp-failure-lab serve
 Connect, open **Tools**, select `duplicate_response`, and call it with `{}`. Note whether Inspector
 returns the first result, reports the duplicate, or closes the connection. Then run `ping`.
 
+## `truncated_response`
+
+Ends one tool response immediately after the JSON-RPC `"result":` key, before its value. The
+tool accepts `{}` and is available over stdio and Streamable HTTP. Unlike `malformed_message`,
+which returns a complete response with invalid JSON-RPC fields, this fault sends incomplete JSON.
+
+On stdio, the server writes the prefix and closes the connection. Start a new server process to
+check recovery with `ping`. Over HTTP, the server cuts the JSON response body or the SSE `data:`
+field; an SSE response also lacks its final event delimiter. The HTTP listener remains available
+for another request. The fault affects only the activating request, with at most 128 pending
+activations and a 256-byte limit on the emitted prefix.
+
+From a repository checkout, run the [client example](https://github.com/anilloutombam/mcp-failure-lab/blob/main/examples/ci/truncated-response/run.mjs):
+
+```sh
+node examples/ci/truncated-response/run.mjs
+```
+
+For HTTP, start `npm run dev -- serve --transport http` in another terminal, then run:
+
+```sh
+node examples/ci/truncated-response/run.mjs http://127.0.0.1:3000/mcp
+```
+
+The example records the client error and checks `ping` on a fresh stdio process or the same HTTP
+session. The built-in scenario runner uses an in-memory transport and cannot produce partial wire
+bytes for this fault.
+
 ## `invalid_progress`
 
 Sends a deliberately invalid MCP progress notification for one tool call. This tool is available
