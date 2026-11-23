@@ -44,6 +44,10 @@ legacy SSE response events use the same fault rules. Unrelated SSE events remain
 same request ID. This applies to modern and legacy HTTP requests. See
 [Fault Tools](/docs/fault-tools/#duplicate_response) for expected client behavior.
 
+`truncated_response` ends the activating request's JSON body or SSE `data:` field after the
+`"result":` key. The SSE event delimiter is also omitted. The listener remains available for
+later requests. See [Fault Tools](/docs/fault-tools/#truncated_response) for recovery checks.
+
 The `invalid_progress` tool sends at most two request-scoped progress
 notifications. For `after-completion`, the notification follows the matching response event in
 the HTTP response stream, including for initialized legacy sessions. See
